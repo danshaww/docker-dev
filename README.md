@@ -1,6 +1,10 @@
-## Docker Images Repository  
+## Docker Development Repository  
   
-This repository contains my custom docker images, with individual projects stored in sub directories.  
+This repository contains all of my code relating to Docker, comprised of both dockerfile's and associated files & compose templates.  
+
+
+**Ignore the below, this needs updating**
+
   
 All changes must be made on feature branches, and then merged into the main branch via a pull request.  
   
