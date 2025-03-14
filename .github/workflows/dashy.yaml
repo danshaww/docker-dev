@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - dashy/**
+      - images/dashy/**
 jobs:
   development:
     permissions:
@@ -14,7 +14,7 @@ jobs:
       docker_env: development
       docker_server: ${{ vars.testing_server}}
       docker_path: ${{ vars.docker_path}}
-      docker_project: "dashy"
+      docker_project: "images/dashy"
     secrets:
       server_username: ${{ secrets.server_username }}
   production:
@@ -28,6 +28,6 @@ jobs:
       docker_env: latest
       docker_server: ${{ vars.production_server}}
       docker_path: ${{ vars.docker_path}}
-      docker_project: "dashy"
+      docker_project: "images/dashy"
     secrets:
       server_username: ${{ secrets.server_username }}
