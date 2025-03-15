@@ -5,12 +5,12 @@ on:
     inputs:
       build_dev:
         description: 'Build Development Image'
-        required: false
+        required: true
         default: true
         type: boolean
       build_prod:
         description: 'Build Production Image'
-        required: false
+        required: true
         default: false
         type: boolean
 
@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ github.event.inputs.build_dev}} == true
+    if: ${{ github.event.inputs.build_dev}}
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: development
@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ github.event.inputs.build_prod}} == true
+    if: ${{ github.event.inputs.build_prod}}
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: latest
