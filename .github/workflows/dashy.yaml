@@ -1,33 +1,36 @@
 name: Docker - Dashy Build & Deploy
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - images/dashy/**
+    inputs:
+      build_dev:
+        description: 'Build Development Image'
+        required: false
+        default: true
+        type: boolean
+      build_prod:
+        description: 'Build Production Image'
+        required: false
+        default: false
+        type: boolean
+
 jobs:
   development:
     permissions:
       contents: read
       packages: write
+    if: ${{ github.event.inputs.build_dev == true}}
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: development
-      docker_server: ${{ vars.testing_server}}
-      docker_path: ${{ vars.docker_path}}
       docker_project: "images/dashy"
-    secrets:
-      server_username: ${{ secrets.server_username }}
+
   production:
     needs: development
     permissions:
       contents: read
       packages: write
-    if: github.ref == 'refs/heads/main'
+    if: ${{ github.event.inputs.build_prod == true}}
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: latest
-      docker_server: ${{ vars.production_server}}
-      docker_path: ${{ vars.docker_path}}
       docker_project: "images/dashy"
-    secrets:
-      server_username: ${{ secrets.server_username }}
