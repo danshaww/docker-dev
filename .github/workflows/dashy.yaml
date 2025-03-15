@@ -1,4 +1,5 @@
-name: Docker - Dashy Build & Deploy
+name: Build Dashy
+
 on:
   workflow_dispatch:
     inputs:
@@ -22,7 +23,7 @@ jobs:
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: development
-      docker_project: "images/dashy"
+      docker_project: "dashy"
 
   production:
     needs: development
@@ -33,4 +34,4 @@ jobs:
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: latest
-      docker_project: "images/dashy"
+      docker_project: "dashy"
