@@ -1,4 +1,4 @@
-name: Build Dashy
+name: Build Dashy Project
 
 on:
   workflow_dispatch:
