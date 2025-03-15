@@ -18,7 +18,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ github.event.inputs.build_dev == true}}
+    if: ${{ github.event.inputs.build_dev}} == true
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: development
@@ -29,7 +29,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ github.event.inputs.build_prod == true}}
+    if: ${{ github.event.inputs.build_prod}} == true
     uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
     with:
       docker_env: latest
