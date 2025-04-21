@@ -14,26 +14,24 @@ on:
         default: false
         type: boolean
 
-jobs:
-  development:
-    permissions:
-      contents: read
-      packages: write
-    if: ${{ github.event.inputs.build_dev == 'true' }}
-    uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
-    with:
-      image_tag: development
-      image_name: hello-world
-      build_path: images/hello-world
+env:
+  image_name: hello-world
+  build_path: images/hello-world
+  registry: gitea.internal.epichouse.co.uk
+  owner: dan
 
-  production:
-    needs: development
-    permissions:
-      contents: read
-      packages: write
-    if: ${{ github.event.inputs.build_prod == 'true' }}
-    uses: epichouse/workflow-templates/.github/workflows/docker-build.yaml@main
-    with:
-      image_tag: latest
-      image_name: hello-world
-      build_path: images/hello-world
+jobs:
+  build-dev:
+    runs-on: london
+    defaults:
+      run:
+        working-directory: ${{ env.build_path }}/
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
