@@ -1,0 +1,57 @@
+name: Build Homepage Project
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_dev:
+        description: 'Build Development Image'
+        required: true
+        default: true
+        type: boolean
+      build_prod:
+        description: 'Build Production Image'
+        required: true
+        default: false
+        type: boolean
+
+env:
+  image_name: homepage
+  build_path: images/homepage
+  registry: gitea.internal.epichouse.co.uk
+  owner: dan
+
+jobs:
+  build-dev:
+    runs-on: london
+    if: ${{ github.event.inputs.build_dev == 'true' }}
+    defaults:
+      run:
+        working-directory: ${{ env.build_path }}/
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
+  build-prod:
+    runs-on: london
+    if: ${{ github.event.inputs.build_prod == 'true' }}
+    defaults:
+      run:
+        working-directory: ${{ env.build_path }}/
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
