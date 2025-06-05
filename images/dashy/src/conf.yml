@@ -41,37 +41,37 @@ sections:
   - title: Gitea
     description: My self hosted git server.
     icon: hl-gitea
-    url: https://gitea.prod.epichouse.co.uk/
+    url: https://gitea.epichouse.co.uk/
     target: newtab
   - title: Passbolt
     description: My self hosted password manager.
     icon: hl-passbolt
-    url: https://passbolt.prod.epichouse.co.uk/
+    url: https://passbolt.internal.epichouse.co.uk/
     target: newtab
   - title: Netbox
     description: My self hosted IPAM solution.
     icon: hl-netbox
-    url: https://netbox.prod.epichouse.co.uk/
+    url: https://netbox.internal.epichouse.co.uk/
     target: newtab
   - title: Bookstack
     description: My self hosted documentation solution.
     icon: hl-bookstack
-    url: https://docs.prod.epichouse.co.uk/
+    url: https://docs.internal.epichouse.co.uk/
     target: newtab
   - title: Uptime Kuma
     description: My self hosted monitoring solution.
     icon: hl-uptime-kuma
-    url: https://uptimekuma.prod.epichouse.co.uk/
+    url: https://uptimekuma.internal.epichouse.co.uk/
     target: newtab
   - title: qBittorrent
     description: My self hosted bittorrent solution.
     icon: hl-qbittorrent
-    url: https://qbittorrent.prod.epichouse.co.uk/
+    url: https://qbittorrent.internal.epichouse.co.uk/
     target: newtab
   - title: Graylog
     description: My self hosted logging solution.
     icon: hl-graylog
-    url: https://graylog.prod.epichouse.co.uk/
+    url: https://graylog.internal.epichouse.co.uk/
     target: newtab
 
 - name: Infrastructure (Manchester)
