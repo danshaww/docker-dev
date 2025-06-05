@@ -6,82 +6,92 @@ pageInfo:
 
 # Optional app settings and configuration
 appConfig:
-  theme: Default
+  theme: Material-Dark
+  customColors:
+    material-dark:
+      primary: #5c90eb
+      background: #313941
+      background-darker: #5c90eb
   webSearch: { disableWebSearch: true }
+  layout: horizontal
  # iconSize: true
   #disableConfiguration: true
   hideSettings: true
 # Main content - An array of sections, each containing an array of items
 sections:
-- name: Productivity
-  icon: fas fa-keyboard
-  items:
-  - title: Todoist
-    description: Task Management
-    icon: hl-todoist
-    url: https://app.todoist.com/
-    target: newtab
-  - title: Notion
-    description: Notes
-    icon: hl-notion
-    url: https://notion.so/
-    target: newtab
-  - title: ChatGPT
-    description: Chat GPT
-    icon: favicon
-    url: https://chatgpt.com
-    target: newtab
-  - title: OneDrive
-    description: File Storage
-    icon: hl-microsoft
-    url: https://onedrive.live.com/?id=root&cid=4ECE5434F5DFF502
-    target: newtab
-  - title: iCloud
-    description: Apple iCloud
-    icon: hl-apple
-    url: https://www.icloud.com/photos/
-    target: newtab
-  - title: Gmail
-    description: Google Mail
-    icon: hl-gmail
-    url: https://mail.google.com/
-    target: newtab
-  - title: Google Calendar
-    description: Google Calendar
-    icon: hl-google-calendar
-    url: https://calendar.google.com
-    target: newtab
-    
 
-- name: Entertainment
-  icon: fas fa-tv
+- name: London
+  icon: fas fa-server
   items:
-  - title: Youtube
-    description: Youtube
-    icon: hl-youtube
-    url: https://youtube.com/
+  - title: Proxmox VE
+    description: Primary Virtualisation Server
+    icon: hl-proxmox
+    url: https://srv-pve-prod-01.internal.epichouse.co.uk:8006/
     target: newtab
-  - title: Netflix
-    description: Netflix
-    icon: hl-netflix
-    url: https://netflix.com/
+  - title: Proxmox Backup Server
+    description: Primary Backup Server
+    icon: hl-proxmox
+    url: https://srv-pbs-prod-01.internal.epichouse.co.uk:8007/
     target: newtab
-  - title: iPlayer
-    description: iPlayer
-    icon: favicon
-    url: https://www.bbc.co.uk/iplayer
+  - title: Unifi
+    description: Network Controller (local)
+    icon: hl-unifi
+    url: https://unifi-ldn.epichouse.co.uk/
     target: newtab
-  - title: ITVx
-    description: ITVx
-    icon: favicon
-    url: https://www.itv.com/
+  - title: Gitea
+    description: My self hosted git server.
+    icon: hl-gitea
+    url: https://gitea.prod.epichouse.co.uk/
     target: newtab
-  - title: Plex
-    description: Plex
-    icon: hl-plex
-    url: https://plex.prod.epichouse.co.uk/
+  - title: Passbolt
+    description: My self hosted password manager.
+    icon: hl-passbolt
+    url: https://passbolt.prod.epichouse.co.uk/
+    target: newtab
+  - title: Netbox
+    description: My self hosted IPAM solution.
+    icon: hl-netbox
+    url: https://netbox.prod.epichouse.co.uk/
+    target: newtab
+  - title: Bookstack
+    description: My self hosted documentation solution.
+    icon: hl-bookstack
+    url: https://docs.prod.epichouse.co.uk/
+    target: newtab
+  - title: Uptime Kuma
+    description: My self hosted monitoring solution.
+    icon: hl-uptime-kuma
+    url: https://uptimekuma.prod.epichouse.co.uk/
+    target: newtab
+  - title: qBittorrent
+    description: My self hosted bittorrent solution.
+    icon: hl-qbittorrent
+    url: https://qbittorrent.prod.epichouse.co.uk/
+    target: newtab
+  - title: Graylog
+    description: My self hosted logging solution.
+    icon: hl-graylog
+    url: https://graylog.prod.epichouse.co.uk/
     target: newtab
 
+- name: Infrastructure (Manchester)
+  icon: fas fa-server
+  items:
+  - title: Unifi
+    description: Network Controller (local)
+    icon: hl-unifi
+    url: https://unifi-mcr.epichouse.co.uk/
+    target: newtab
+  - title: Proxmox VE
+    description: MCR Virtualisation Server
+    icon: hl-proxmox
+    url: https://srv-pve-mcr-prod-01.internal.epichouse.co.uk:8006/
+    target: newtab
+  - title: Proxmox Backup Server
+    description: MCR Backup Server
+    icon: hl-proxmox
+    url: https://vm-pbs-mcr-prod-01.internal.epichouse.co.uk:8007/
+    target: newtab
 
 
 - name: Cloud Services
@@ -132,80 +142,8 @@ sections:
     icon: hl-cloudflare-zero-trust
     url: https://one.dash.cloudflare.com/90d66f15b080eee95b3ea1fae786118e/access/apps?search=
     target: newtab
-
-- name: Homelab Services
-  icon: fas fa-flask
-  items:
-  - title: Gitea
-    description: My self hosted git server.
-    icon: hl-gitea
-    url: https://gitea.prod.epichouse.co.uk/
-    target: newtab
-  - title: Passbolt
-    description: My self hosted password manager.
-    icon: hl-passbolt
-    url: https://passbolt.prod.epichouse.co.uk/
-    target: newtab
-  - title: Netbox
-    description: My self hosted IPAM solution.
-    icon: hl-netbox
-    url: https://netbox.prod.epichouse.co.uk/
-    target: newtab
-  - title: Bookstack
-    description: My self hosted documentation solution.
-    icon: hl-bookstack
-    url: https://docs.prod.epichouse.co.uk/
-    target: newtab
-  - title: Uptime Kuma
-    description: My self hosted monitoring solution.
-    icon: hl-uptime-kuma
-    url: https://uptimekuma.prod.epichouse.co.uk/
-    target: newtab
-  - title: qBittorrent
-    description: My self hosted bittorrent solution.
-    icon: hl-qbittorrent
-    url: https://qbittorrent.prod.epichouse.co.uk/
-    target: newtab
-  - title: Graylog
-    description: My self hosted logging solution.
-    icon: hl-graylog
-    url: https://graylog.prod.epichouse.co.uk/
-    target: newtab
-
-- name: Infrastructure (London)
-  icon: fas fa-server
-  items:
-  - title: OPNSense
-    description: Rotuer
-    icon: hl-opnsense
-    url: https://vm-gw-prod-01.internal.epichouse.co.uk/
-    target: newtab
-  - title: PVE
-    description: Primary Virtualisation Server
-    icon: hl-proxmox
-    url: https://srv-pve-prod-01.internal.epichouse.co.uk:8006/
-    target: newtab
-  - title: PBS
-    description: Primary Backup Server
-    icon: hl-proxmox
-    url: https://srv-pbs-prod-01.internal.epichouse.co.uk:8007/
-    target: newtab
-
-- name: Infrastructure (Manchester)
-  icon: fas fa-server
-  items:
   - title: Unifi
-    description: Network Controller
+    description: Network Controller (Cloud)
     icon: hl-unifi
-    url: https://unifi.prod.epichouse.co.uk/
-    target: newtab
-  - title: PVE
-    description: DR Virtualisation Server
-    icon: hl-proxmox
-    url: https://srv-pve-mcr-prod-01.internal.epichouse.co.uk:8006/
-    target: newtab
-  - title: PBS
-    description: DR Backup Server
-    icon: hl-proxmox
-    url: https://vm-pbs-mcr-prod-01.internal.epichouse.co.uk:8007/
+    url: https://ui.unifi.com/
     target: newtab
