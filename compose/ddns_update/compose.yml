@@ -1,0 +1,17 @@
+networks:
+  backend: null
+
+services:
+  ddns:
+    # image: debian
+    # tty: true
+    # restart: no
+    # command: /bin/bash -c "apt update && apt install -y coreutils bind9-dnsutils && printf \"update add dashy-test.internal.epichouse.co.uk. 3600 CNAME ldnapptst1.internal.epichouse.co.uk.\\n send\" | nsupdate -d && echo test"
+    # networks:
+    #   - backend
+    image: alpine
+    tty: true
+    restart: no
+    command: /bin/sh -c "apk add bash coreutils bind-tools ; printf \"update add dashy-test.internal.epichouse.co.uk. 3600 CNAME ldnapptst1.internal.epichouse.co.uk.\\n send\" | nsupdate -d && echo test"
+    networks:
+      - backend
