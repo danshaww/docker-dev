@@ -1,0 +1,4 @@
+FROM squidfunk/mkdocs-material
+COPY src /docs/documentation/
+COPY mkdocs.yml mkdocs.yml
+# COPY .gitea/build/index.md /docs/documentation/index.md
