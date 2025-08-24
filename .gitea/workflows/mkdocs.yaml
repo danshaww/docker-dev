@@ -12,7 +12,6 @@ env:
 jobs:
   build-dev:
     runs-on: london
-    if: ${{ github.event.inputs.build_dev == 'true' }}
     defaults:
       run:
         working-directory: ${{ env.build_path }}/
