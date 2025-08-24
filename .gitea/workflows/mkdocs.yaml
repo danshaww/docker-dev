@@ -25,4 +25,4 @@ jobs:
       - name: Build Docker Image
         run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest .
       - name: Push Docker Image
-        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
