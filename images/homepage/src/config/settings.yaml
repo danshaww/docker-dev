@@ -3,8 +3,8 @@
 # https://gethomepage.dev/latest/configs/settings
 
 title: Homepage
-#background: 
-#  image: /images/background.jpg
+background:
+ image: /images/background.jpg
 #  blur: sm
 #  brightness: 10
 #  opacity: 40
