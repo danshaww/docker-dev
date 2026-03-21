@@ -42,10 +42,13 @@
         /* --link-color: #4fc3f7; */
         --link-hover: #e0e0e0;
         /* --link-hover: #81d4fa; */
-        --code-bg: #3a3a3a;
+        /* --code-bg: #3a3a3a; */
+        --code-bg: #0a0a0a;
         --border-color: #555;
-        --table-bg: #3a3a3a;
-        --blockquote-bg: #3a3a3a;
+        /* --table-bg: #3a3a3a; */
+        --table-bg: #0a0a0a;
+        --blockquote-bg: #0a0a0a;
+        /* --blockquote-bg: #3a3a3a; */
         --hr-color: #555;
         --shadow: rgba(0, 0, 0, 0.3);
     }
