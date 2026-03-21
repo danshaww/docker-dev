@@ -5,8 +5,8 @@
 title: Epichouse
 description: Epichouse Dashboard
 resources: false
-background:
-  image: /images/background.jpg
+# background:
+#   image: /images/background.jpg
 #   blur: sm
 #   brightness: 10
 #   # opacity: 40

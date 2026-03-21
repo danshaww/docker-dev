@@ -1,0 +1,14 @@
+body {
+  background-color: #000000 !important;
+}
+
+/* Main containers */
+#root, .app, .layout {
+  background-color: #000000 !important;
+}
+
+/* Cards / widgets */
+.card, .widget, .tile {
+  background-color: #000000 !important;
+  border: 1px solid #111 !important;
+}
