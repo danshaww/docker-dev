@@ -5,20 +5,20 @@
 title: Epichouse
 description: Epichouse Dashboard
 resources: false
-background:
-  image: /images/background.png
-  blur: sm
-  brightness: 10
-  # opacity: 40
-  saturate: 0
+# background:
+#   image: /images/background.png
+#   blur: sm
+#   brightness: 10
+#   # opacity: 40
+#   saturate: 0
 
-# headerStyle: boxed
+headerStyle: boxed
 
-# quicklaunch:
-#   searchDescriptions: true
-# #  hideInternetSearch: true
-#   showSearchSuggestions: true
-# #  hideVisitURL: true
+quicklaunch:
+  searchDescriptions: true
+#  hideInternetSearch: true
+  showSearchSuggestions: true
+#  hideVisitURL: true
 
 
 
