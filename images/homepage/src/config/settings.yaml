@@ -10,7 +10,7 @@ background:
   blur: sm
   brightness: 10
   # opacity: 40
-  # saturate: 50
+  saturate: 0
 
 # headerStyle: boxed
 
