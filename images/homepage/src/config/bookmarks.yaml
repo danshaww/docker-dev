@@ -2,143 +2,171 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/latest/configs/bookmarks
 
-- Manchester Infrastructure:
-    - Proxmox:
-        - abbr: 
-          href: https://srv-pve-mcr-prod-01.internal.epichouse.co.uk:8006/
-          description: srv-pve-mcr-prod-01
-          icon: proxmox.png
-    - Proxmox Backup Server:
-        - abbr: 
-          href: https://vm-pbs-mcr-prod-01.internal.epichouse.co.uk:8007/
-          description: vm-pbs-mcr-prod-01
-          icon: proxmox.png
-    - Unifi Controller:
-        - abbr: 
-          href: https://unifi.prod.epichouse.co.uk/
-          description: Unifi Network Management
-          icon: unifi.png
-    - Traefik:
-        - abbr: 
-          href: https://traefik-mcr.prod.epichouse.co.uk/
-          description: Reverse Proxy
-          icon: traefik.png
-
-- London Infrastructure:
-    - Proxmox:
-        - abbr: 
-          href: https://srv-pve-prod-01.internal.epichouse.co.uk:8006/
-          description: srv-pve-prod-01
-          icon: proxmox.png
-    - Proxmox Backup Server:
-        - abbr: 
-          href: https://vm-pbs-prod-01.internal.epichouse.co.uk:8007/
-          description: srv-pbs-prod-01
-          icon: proxmox.png
-    - OPNSense:
-        - abbr: 
-          href: https://vm-gw-prod-01.internal.epichouse.co.uk/
-          description: vm-gw-prod-01
-          icon: opnsense.png
-    - Uptime Kuma:
-        - abbr: 
-          href: https://uptimekuma.prod.epichouse.co.uk/
-          description: Primary Monitoring Server
-          icon: uptime-kuma.png
-    - Traefik (Production):
-        - abbr: 
-          href: https://traefik.prod.epichouse.co.uk/
-          description: Reverse Proxy
-          icon: traefik.png
-    - Traefik (Test):
-        - abbr: 
-          href: https://traefik.test.epichouse.co.uk/
-          description: Reverse Proxy
-          icon: traefik.png
-
-- Self Hosted Services:
-    - BookStack:
-        - abbr: 
-          href: https://docs.prod.epichouse.co.uk/
-          description:  Wiki
-          icon: bookstack.png
-    - PassBolt:
-        - abbr: 
-          href: https://passbolt.prod.epichouse.co.uk/
-          description:  Password Management Tool
-          icon: passbolt.png
-    - Gitea:
-        - abbr: 
-          href: https://gitea.prod.epichouse.co.uk/
-          description:  GIT Server
-          icon: gitea.png
-    - Guacamole:
-        - abbr: 
-          href: https://rdp.epichouse.co.uk/
-          description: Web Based RDP/SSH Client
-          icon: guacamole.png
-    - Plex:
-        - abbr: 
-          href: https://plex.prod.epichouse.co.uk/
-          description: Plex Media Server
-          icon: plex.png
-    - qBittorrent:
-        - abbr: 
-          href: https://qbittorrent.prod.epichouse.co.uk/
-          description: Torrent Client
-          icon: qbittorrent.png
-    - Files Web Service:
-        - abbr: 
-          href: https://files.prod.epichouse.co.uk/
-          description: HTTP(S) File Download Web Service
-          icon: /images/www.png
-    - Web File Browser:
-        - abbr: 
-          href: https://filebrowser.epichouse.co.uk/
-          description: HTTP(S) File Browser
-          icon: filebrowser.png
-    - Epichouse Website:
-        - abbr: 
-          href: https://epichouse.co.uk/
-          description: Public Epichouse Website
-          icon: /images/www.png
-
-
-- Third Party Services and Tools:
-    - Notion:
-        - abbr: 
-          href: https://www.notion.so/
-          icon: notion.png
-    - Microsoft 365:
-        - abbr: 
-          href: https://microsoft365.com/
-          icon: /images/m365.png
-    - Microsoft OneDrive:
-        - abbr: 
-          href: https://onedrive.live.com/
-          icon: /images/onedrive.png
-    - Todoist:
+- Infrastructure:
+    - Proxmox (London):
         - abbr:
-          href: https://app.todoist.com/
-          icon: todoist.png
-    - Azure DevOps:
-        - abbr: 
-          href: https://dev.azure.com/EpichouseCloud/EpicProject/_build
-          icon: azure-devops.png
-    - Cloudflare:
-        - abbr: 
-          href: https://dash.cloudflare.com/90d66f15b080eee95b3ea1fae786118e/epichouse.co.uk
-          icon: cloudflare.png
-    - BackBlaze:
-        - abbr:   
-          href: https://secure.backblaze.com/b2_buckets.htm?bznetid=12066201361702750791444
-          icon: backblaze.png
-    - SendGrid:
-        - abbr: 
-          href: https://sendgrid.com/
-          icon: /images/sendgrid.png
-    - SMTP2GO:
-        - abbr: 
-          href: https://app.smtp2go.com/
-          icon: /images/smtp2go.png
+          href: https://ldnpveprd1.epichouse.co.uk:8006/
+          description: ldnpveprd1
+          icon: proxmox.png
+    - Proxmox (Manchester):
+        - abbr:
+          href: https://mcrpveprd1.epichouse.co.uk:8006/
+          description: mcrpveprd1
+          icon: proxmox.png
+    - Proxmox Backup Server (London):
+        - abbr:
+          href: https://ldnpbsprd1.epichouse.co.uk:8007/
+          description: ldnpbsprd1
+          icon: proxmox.png
+    - Proxmox Backup Server (Manchester):
+        - abbr:
+          href: https://mcrpbsprd1.epichouse.co.uk:8007/
+          description: mcrpbsprd1
+          icon: proxmox.png
+    - TrueNAS (London):
+        - abbr:
+          href: https://ldnnasprd1.epichouse.co.uk/
+          description: ldnnasprd1
+          icon: truenas.png
+    - TrueNAS (Manchester):
+        - abbr:
+          href: https://mcrnasprd1.epichouse.co.uk/
+          description: mcrnasprd1
+          icon: truenas.png
+
+
+
+#     - Proxmox Backup Server:
+#         - abbr: 
+#           href: https://vm-pbs-mcr-prod-01.internal.epichouse.co.uk:8007/
+#           description: vm-pbs-mcr-prod-01
+#           icon: proxmox.png
+#     - Unifi Controller:
+#         - abbr: 
+#           href: https://unifi.prod.epichouse.co.uk/
+#           description: Unifi Network Management
+#           icon: unifi.png
+#     - Traefik:
+#         - abbr: 
+#           href: https://traefik-mcr.prod.epichouse.co.uk/
+#           description: Reverse Proxy
+#           icon: traefik.png
+
+# - London Infrastructure:
+#     - Proxmox:
+#         - abbr: 
+#           href: https://srv-pve-prod-01.internal.epichouse.co.uk:8006/
+#           description: srv-pve-prod-01
+#           icon: proxmox.png
+#     - Proxmox Backup Server:
+#         - abbr: 
+#           href: https://vm-pbs-prod-01.internal.epichouse.co.uk:8007/
+#           description: srv-pbs-prod-01
+#           icon: proxmox.png
+#     - OPNSense:
+#         - abbr: 
+#           href: https://vm-gw-prod-01.internal.epichouse.co.uk/
+#           description: vm-gw-prod-01
+#           icon: opnsense.png
+#     - Uptime Kuma:
+#         - abbr: 
+#           href: https://uptimekuma.prod.epichouse.co.uk/
+#           description: Primary Monitoring Server
+#           icon: uptime-kuma.png
+#     - Traefik (Production):
+#         - abbr: 
+#           href: https://traefik.prod.epichouse.co.uk/
+#           description: Reverse Proxy
+#           icon: traefik.png
+#     - Traefik (Test):
+#         - abbr: 
+#           href: https://traefik.test.epichouse.co.uk/
+#           description: Reverse Proxy
+#           icon: traefik.png
+
+# - Self Hosted Services:
+#     - BookStack:
+#         - abbr: 
+#           href: https://docs.prod.epichouse.co.uk/
+#           description:  Wiki
+#           icon: bookstack.png
+#     - PassBolt:
+#         - abbr: 
+#           href: https://passbolt.prod.epichouse.co.uk/
+#           description:  Password Management Tool
+#           icon: passbolt.png
+#     - Gitea:
+#         - abbr: 
+#           href: https://gitea.prod.epichouse.co.uk/
+#           description:  GIT Server
+#           icon: gitea.png
+#     - Guacamole:
+#         - abbr: 
+#           href: https://rdp.epichouse.co.uk/
+#           description: Web Based RDP/SSH Client
+#           icon: guacamole.png
+#     - Plex:
+#         - abbr: 
+#           href: https://plex.prod.epichouse.co.uk/
+#           description: Plex Media Server
+#           icon: plex.png
+#     - qBittorrent:
+#         - abbr: 
+#           href: https://qbittorrent.prod.epichouse.co.uk/
+#           description: Torrent Client
+#           icon: qbittorrent.png
+#     - Files Web Service:
+#         - abbr: 
+#           href: https://files.prod.epichouse.co.uk/
+#           description: HTTP(S) File Download Web Service
+#           icon: /images/www.png
+#     - Web File Browser:
+#         - abbr: 
+#           href: https://filebrowser.epichouse.co.uk/
+#           description: HTTP(S) File Browser
+#           icon: filebrowser.png
+#     - Epichouse Website:
+#         - abbr: 
+#           href: https://epichouse.co.uk/
+#           description: Public Epichouse Website
+#           icon: /images/www.png
+
+
+# - Third Party Services and Tools:
+#     - Notion:
+#         - abbr: 
+#           href: https://www.notion.so/
+#           icon: notion.png
+#     - Microsoft 365:
+#         - abbr: 
+#           href: https://microsoft365.com/
+#           icon: /images/m365.png
+#     - Microsoft OneDrive:
+#         - abbr: 
+#           href: https://onedrive.live.com/
+#           icon: /images/onedrive.png
+#     - Todoist:
+#         - abbr:
+#           href: https://app.todoist.com/
+#           icon: todoist.png
+#     - Azure DevOps:
+#         - abbr: 
+#           href: https://dev.azure.com/EpichouseCloud/EpicProject/_build
+#           icon: azure-devops.png
+#     - Cloudflare:
+#         - abbr: 
+#           href: https://dash.cloudflare.com/90d66f15b080eee95b3ea1fae786118e/epichouse.co.uk
+#           icon: cloudflare.png
+#     - BackBlaze:
+#         - abbr:   
+#           href: https://secure.backblaze.com/b2_buckets.htm?bznetid=12066201361702750791444
+#           icon: backblaze.png
+#     - SendGrid:
+#         - abbr: 
+#           href: https://sendgrid.com/
+#           icon: /images/sendgrid.png
+#     - SMTP2GO:
+#         - abbr: 
+#           href: https://app.smtp2go.com/
+#           icon: /images/smtp2go.png
 
