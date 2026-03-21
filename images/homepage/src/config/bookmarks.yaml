@@ -54,6 +54,64 @@
           description: mcrmonprd1
           icon: nagios.png
 
+- Prod Applications:
+    - Files Web Service:
+        - abbr:
+          href: https://files.epichouse.co.uk/
+          description: ""
+          icon: files.png
+    - Filebrowser:
+        - abbr:
+          href: https://filebrowser.epichouse.co.uk/
+          description: ""
+          icon: filebrowser.png
+    - Gitea:
+        - abbr:
+          href: https://gitea.epichouse.co.uk/
+          description: ""
+          icon: gitea.png
+    - Jellyfin:
+        - abbr:
+          href: https://jellyfin.epichouse.co.uk/
+          description: ""
+          icon: jellyfin.png
+    - Navidrome:
+        - abbr:
+          href: https://navidrome.epichouse.co.uk/
+          description: ""
+          icon: navidrome.png
+    - Plex:
+        - abbr:
+          href: https://plexmediaserver.epichouse.co.uk/
+          description: ""
+          icon: plex.png
+    - Code Snippets:
+        - abbr:
+          href: https://snippets.epichouse.co.uk/
+          description: ""
+          icon: snippetbox.png
+
+- Test Applications:
+    - Semaphore:
+        - abbr:
+          href: https://semaphore-test.epichouse.co.uk/
+          description: ""
+          icon: semaphore.png
+    - IT Tools:
+        - abbr:
+          href: https://ittools.epichouse.co.uk/
+          description: "Running on k8s"
+          icon: it-tools.png
+    - N8N:
+        - abbr:
+          href: https://n8n-test.epichouse.co.uk/
+          description: ""
+          icon: n8n.png
+    - Netbox:
+        - abbr:
+          href: https://netbox-test.epichouse.co.uk/
+          description: ""
+          icon: netbox.png
 
 
 #     - Proxmox Backup Server:

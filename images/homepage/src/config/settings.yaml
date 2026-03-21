@@ -4,7 +4,7 @@
 
 title: Homepage
 background:
- image: /images/background.jpg
+  image: /images/background.jpg
 #  blur: sm
 #  brightness: 10
 #  opacity: 40
@@ -22,20 +22,18 @@ quicklaunch:
 
 
 layout:
-  Self Hosted Services:
+  Infrastructure:
     style: column
-  Third Party Services and Tools:
+  Prod Applications:
     style: column
-  London Infrastructure:
-    style: column
-  Manchester Infrastructure:
+  Test Applications:
     style: column
 
 #groupsInitiallyCollapsed: true
 useEqualHeights: true
 disableCollapse: true
 theme: dark
-color: slate
+color: gray
 #
 #providers:
 #  openweathermap: openweathermapapikey
