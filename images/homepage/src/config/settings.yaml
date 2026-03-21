@@ -34,8 +34,10 @@ layout:
 #groupsInitiallyCollapsed: true
 useEqualHeights: true
 disableCollapse: true
-theme: dark
-color: neutral
+theme:
+  background: "#000000"
+  cardBackground: "#000000"
+# color: neutral
 #
 #providers:
 #  openweathermap: openweathermapapikey
