@@ -33,6 +33,26 @@
           href: https://mcrnasprd1.epichouse.co.uk/
           description: mcrnasprd1
           icon: truenas.png
+    - TrueCommand:
+        - abbr:
+          href: https://truecommand.epichouse.co.uk/
+          description: TrueNAS Management
+          icon: truecommand.png
+    - Dockhand:
+        - abbr:
+          href: https://dockhand.epichouse.co.uk/nagios/
+          description: Docker Management & Logging
+          icon: docker.png
+    - Nagios (London):
+        - abbr:
+          href: https://ldnmonprd1.epichouse.co.uk/nagios/
+          description: ldnmonprd1
+          icon: nagios.png
+    - Nagios (Manchester):
+        - abbr:
+          href: https://mcrmonprd1.epichouse.co.uk/nagios/
+          description: mcrmonprd1
+          icon: nagios.png
 
 
 
