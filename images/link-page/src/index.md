@@ -1,4 +1,4 @@
-# Epichouse Dashboard
+# Welcome
 
 ## Infrastructure
 **[Proxmox (London)](https://ldnpveprd1.epichouse.co.uk:8006/)**  
