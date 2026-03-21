@@ -24,7 +24,7 @@ jobs:
       - name: Authenticate with Gitea
         run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
       - name: Build Docker Image
-        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile images/${{ env.image_name }}
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
   deploy:
