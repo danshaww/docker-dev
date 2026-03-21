@@ -32,13 +32,14 @@
         --container-bg: #0a0a0a;
         --text-color: #e0e0e0;
         --heading-color: #ffffff;
-        --heading-secondary: #b0b0b0;
+        --heading-secondary: #4fa6f7;
         --nav-bg: #0a0a0a;
         --nav-text: #ffffff;
         --nav-accent: #4fc3f7;
         --link-color: #e0e0e0;
         /* --link-color: #4fc3f7; */
-        --link-hover: #81d4fa;
+        --link-hover: #e0e0e0;
+        /* --link-hover: #81d4fa; */
         --code-bg: #3a3a3a;
         --border-color: #555;
         --table-bg: #3a3a3a;
@@ -99,7 +100,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     border-bottom: 3px solid var(--nav-accent);
     padding-bottom: 0.5rem;
     margin-bottom: 1.5rem;
@@ -107,13 +108,13 @@ h1 {
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-top: 2rem;
     color: var(--heading-secondary);
 }
 
 h3 {
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin-top: 1.5rem;
     color: var(--heading-secondary);
 }
