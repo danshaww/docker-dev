@@ -35,7 +35,7 @@ layout:
 useEqualHeights: true
 disableCollapse: true
 theme: dark
-color: slate
+color: white
 #
 #providers:
 #  openweathermap: openweathermapapikey
