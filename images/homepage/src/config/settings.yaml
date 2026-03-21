@@ -10,13 +10,13 @@ title: Epichouse
 #  opacity: 40
 #  saturate: 50
 
-headerStyle: boxed
+# headerStyle: boxed
 
-quicklaunch:
-  searchDescriptions: true
-#  hideInternetSearch: true
-  showSearchSuggestions: true
-#  hideVisitURL: true
+# quicklaunch:
+#   searchDescriptions: true
+# #  hideInternetSearch: true
+#   showSearchSuggestions: true
+# #  hideVisitURL: true
 
 
 
@@ -33,7 +33,7 @@ layout:
 useEqualHeights: true
 disableCollapse: true
 theme: dark
-color: gray
+color: slate
 #
 #providers:
 #  openweathermap: openweathermapapikey
