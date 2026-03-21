@@ -5,8 +5,8 @@
 title: Epichouse
 description: Epichouse Dashboard
 resources: false
-# background:
-  # image: /images/background.jpg
+background:
+  image: /images/background.jpg
 #   blur: sm
 #   brightness: 10
 #   # opacity: 40
@@ -34,10 +34,8 @@ layout:
 #groupsInitiallyCollapsed: true
 useEqualHeights: true
 disableCollapse: true
-theme:
-  background: "#000000"
-  cardBackground: "#000000"
-# color: neutral
+theme: dark
+color: neutral
 #
 #providers:
 #  openweathermap: openweathermapapikey
