@@ -17,14 +17,14 @@ jobs:
     runs-on: london
     defaults:
       run:
-        working-directory: ./
+        working-directory: ./images/${{ env.image_name }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Authenticate with Gitea
         run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
       - name: Build Docker Image
-        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile images/${{ env.image_name }}
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
   deploy:
