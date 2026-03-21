@@ -35,4 +35,4 @@ jobs:
         working-directory: ./
     steps:
       - name: Pull latest image on ldnapptst1
-        run: ssh sa@ldnapptst1 "cd /var/lib/docker/compose/link-page && sudo docker compose pull && docker compose down && docker compose up -d"
+        run: ssh sa@ldnapptst1 "cd /var/lib/docker/compose/link-page-test && sudo docker compose pull && docker compose down && docker compose up -d"
