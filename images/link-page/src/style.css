@@ -35,7 +35,7 @@
         --heading-secondary: #4fa6f7;
         --nav-bg: #0a0a0a;
         --nav-text: #ffffff;
-        --nav-accent: #4fc3f7;
+        --nav-accent: #4fa6f7;
         --link-color: #e0e0e0;
         /* --link-color: #4fc3f7; */
         --link-hover: #e0e0e0;
@@ -58,7 +58,7 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     background-color: var(--container-bg);
     min-height: 100vh;
