@@ -1,2 +1,3 @@
 FROM mountainpass/go-markdown-server:latest
 COPY src/ /content
+COPY src/favicon.ico /static
