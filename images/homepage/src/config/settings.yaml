@@ -3,12 +3,14 @@
 # https://gethomepage.dev/latest/configs/settings
 
 title: Epichouse
-# background:
-  # image: /images/background.jpg
-#  blur: sm
-#  brightness: 10
-#  opacity: 40
-#  saturate: 50
+description: Epichouse Dashboard
+resources: false
+background:
+  image: /images/background.jpg
+  blur: sm
+  brightness: 10
+  opacity: 40
+  saturate: 50
 
 # headerStyle: boxed
 
