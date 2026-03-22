@@ -6,6 +6,7 @@
   <title>Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
   <style>
     html {
       color-scheme: dark light;
@@ -20,13 +21,8 @@
       --bg: #0a0c10;
       --surface: #111318;
       --border: #1e2230;
-      --accent: #00e5ff;
-      --accent2: #7b61ff;
       --text: #e2e8f0;
       --muted: #6b7280;
-      --pill-bg: #161a24;
-      --pill-hover: #1e2538;
-      --pill-border: #252b3d;
     }
 
     @media (prefers-color-scheme: light) {
@@ -39,21 +35,19 @@
       }
 
       header p { color: #374151 !important; }
-
-      .cloud .dot   { background: #0284c7; box-shadow: 0 0 6px #0284c788; }
-      .infra .dot   { background: #ea580c; box-shadow: 0 0 6px #ea580c88; }
-      .prod .dot    { background: #16a34a; box-shadow: 0 0 6px #16a34a88; }
-      .test .dot    { background: #9333ea; box-shadow: 0 0 6px #9333ea88; }
-
       .section-header h2 { color: #9ca3af; }
       .section-header::after { background: #e5e7eb; }
+      .links a { color: #4b5563 !important; }
 
-      .links a { color: #4b5563; }
+      .theme-cloud .dot { background: #0284c7; box-shadow: 0 0 6px #0284c788; }
+      .theme-infra  .dot { background: #ea580c; box-shadow: 0 0 6px #ea580c88; }
+      .theme-prod   .dot { background: #16a34a; box-shadow: 0 0 6px #16a34a88; }
+      .theme-test   .dot { background: #9333ea; box-shadow: 0 0 6px #9333ea88; }
 
-      .cloud .links a:hover  { color: #0284c7; }
-      .infra .links a:hover  { color: #ea580c; }
-      .prod .links a:hover   { color: #16a34a; }
-      .test .links a:hover   { color: #9333ea; }
+      .theme-cloud .links a:hover { color: #0284c7 !important; }
+      .theme-infra  .links a:hover { color: #ea580c !important; }
+      .theme-prod   .links a:hover { color: #16a34a !important; }
+      .theme-test   .links a:hover { color: #9333ea !important; }
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,7 +60,6 @@
       padding: 48px 32px;
       max-width: 1200px;
       margin: 0 auto;
-
     }
 
     header {
@@ -75,21 +68,10 @@
       border-bottom: 1px solid var(--border);
     }
 
-    header h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #fff 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     header p {
       font-family: 'Roboto', sans-serif;
       font-size: 0.9rem;
       color: #a0aec0;
-      margin-top: 6px;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
@@ -109,9 +91,7 @@
       .sections-grid { grid-template-columns: 1fr; }
     }
 
-    .section {
-      margin-bottom: 0;
-    }
+    .section { margin-bottom: 0; }
 
     .section-header {
       display: flex;
@@ -143,10 +123,10 @@
       flex-shrink: 0;
     }
 
-    .cloud .dot   { background: #00e5ff; box-shadow: 0 0 6px #00e5ff88; }
-    .infra .dot   { background: #f97316; box-shadow: 0 0 6px #f9731688; }
-    .prod .dot    { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
-    .test .dot    { background: #a855f7; box-shadow: 0 0 6px #a855f788; }
+    .theme-cloud .dot { background: #00e5ff; box-shadow: 0 0 6px #00e5ff88; }
+    .theme-infra  .dot { background: #f97316; box-shadow: 0 0 6px #f9731688; }
+    .theme-prod   .dot { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+    .theme-test   .dot { background: #a855f7; box-shadow: 0 0 6px #a855f788; }
 
     .links {
       display: flex;
@@ -163,17 +143,15 @@
       transition: color 0.15s;
     }
 
-    .cloud .links a:hover  { color: #00e5ff !important; }
-    .infra .links a:hover  { color: #f97316 !important; }
-    .prod .links a:hover   { color: #22c55e !important; }
-    .test .links a:hover   { color: #a855f7 !important; }
+    .theme-cloud .links a:hover { color: #00e5ff !important; }
+    .theme-infra  .links a:hover { color: #f97316 !important; }
+    .theme-prod   .links a:hover { color: #22c55e !important; }
+    .theme-test   .links a:hover { color: #a855f7 !important; }
 
-    @media (prefers-color-scheme: light) {
-      .links a { color: #4b5563 !important; }
-      .cloud .links a:hover  { color: #0284c7 !important; }
-      .infra .links a:hover  { color: #ea580c !important; }
-      .prod .links a:hover   { color: #16a34a !important; }
-      .test .links a:hover   { color: #9333ea !important; }
+    #error {
+      color: #f87171;
+      font-size: 0.9rem;
+      margin-top: 24px;
     }
   </style>
 </head>
@@ -183,74 +161,43 @@
     <p>Internal Services Dashboard</p>
   </header>
 
-  <div class="sections-grid">
+  <div class="sections-grid" id="grid"></div>
+  <p id="error" style="display:none"></p>
 
-  <section class="section infra">
-    <div class="section-header">
-      <span class="dot"></span>
-      <h2>Infrastructure</h2>
-    </div>
-    <div class="links">
-      <a href="https://pdm.epichouse.co.uk:8443/#/dashboard" target="_blank">Proxmox Datacenter Manager</a>
-      <a href="https://ldnpveprd1.epichouse.co.uk:8006/" target="_blank">Proxmox (LDN)</a>
-      <a href="https://mcrpveprd1.epichouse.co.uk:8006/" target="_blank">Proxmox (MCR)</a>
-      <a href="https://ldnpbsprd1.epichouse.co.uk:8007/" target="_blank">Proxmox Backup Server (LDN)</a>
-      <a href="https://mcrpbsprd1.epichouse.co.uk:8007/" target="_blank">Proxmox Backup Server (MCR)</a>
-      <a href="https://ldnnasprd1.epichouse.co.uk/" target="_blank">TrueNAS (LDN)</a>
-      <a href="https://mcrnasprd1.epichouse.co.uk/" target="_blank">TrueNAS (MCR)</a>
-      <a href="https://ldnmonprd1.epichouse.co.uk/nagios/" target="_blank">Nagios (LDN)</a>
-      <a href="https://mcrmonprd1.epichouse.co.uk/nagios/" target="_blank">Nagios (MCR)</a>
-      <a href="https://truecommand.epichouse.co.uk/" target="_blank">TrueCommand</a>
-      <a href="https://dockhand.epichouse.co.uk/nagios/" target="_blank">Dockhand</a>
-    </div>
-  </section>
+  <script>
+    fetch('bookmarks.yaml')
+      .then(r => {
+        if (!r.ok) throw new Error(`Could not load bookmarks.yaml (${r.status})`);
+        return r.text();
+      })
+      .then(text => {
+        const data = jsyaml.load(text);
+        const grid = document.getElementById('grid');
 
-  <section class="section prod">
-    <div class="section-header">
-      <span class="dot"></span>
-      <h2>Prod Applications</h2>
-    </div>
-    <div class="links">
-      <a href="https://files.epichouse.co.uk/" target="_blank">Files Web Service</a>
-      <a href="https://filebrowser.epichouse.co.uk/" target="_blank">Filebrowser</a>
-      <a href="https://gitea.epichouse.co.uk/" target="_blank">Gitea</a>
-      <a href="https://jellyfin.epichouse.co.uk/" target="_blank">Jellyfin</a>
-      <a href="https://navidrome.epichouse.co.uk/" target="_blank">Navidrome</a>
-      <a href="https://plexmediaserver.epichouse.co.uk/" target="_blank">Plex</a>
-      <a href="https://snippets.epichouse.co.uk/" target="_blank">Code Snippets</a>
-    </div>
-  </section>
+        data.sections.forEach(section => {
+          const theme = section.theme || 'cloud';
+          const el = document.createElement('section');
+          el.className = `section theme-${theme}`;
+          el.innerHTML = `
+            <div class="section-header">
+              <span class="dot"></span>
+              <h2>${section.title}</h2>
+            </div>
+            <div class="links">
+              ${section.links.map(link =>
+                `<a href="${link.url}" target="_blank">${link.name}</a>`
+              ).join('\n')}
+            </div>
+          `;
+          grid.appendChild(el);
+        });
+      })
+      .catch(err => {
+        const errEl = document.getElementById('error');
+        errEl.style.display = 'block';
+        errEl.textContent = `Error: ${err.message}`;
+      });
+  </script>
 
-  <section class="section test">
-    <div class="section-header">
-      <span class="dot"></span>
-      <h2>Test Applications</h2>
-    </div>
-    <div class="links">
-      <a href="https://semaphore-test.epichouse.co.uk/" target="_blank">Semaphore</a>
-      <a href="https://ittools.epichouse.co.uk/" target="_blank">IT Tools</a>
-      <a href="https://n8n-test.epichouse.co.uk/" target="_blank">N8N</a>
-      <a href="https://netbox-test.epichouse.co.uk/" target="_blank">Netbox</a>
-      <a href="https://vert-test.epichouse.co.uk/" target="_blank">Vert</a>
-      <a href="https://tdashboard.epichouse.co.uk/" target="_blank">K8S Dashboard</a>
-      <a href="https://tlonghorn.epichouse.co.uk/" target="_blank">K8S Longhorn</a>
-    </div>
-  </section>
-
-  <section class="section cloud">
-    <div class="section-header">
-      <span class="dot"></span>
-      <h2>Cloud Services</h2>
-    </div>
-    <div class="links">
-      <a href="https://unifi.ui.com" target="_blank">Unifi Cloud Dashboard</a>
-      <a href="https://portal.azure.com" target="_blank">Azure Portal</a>
-      <a href="https://dev.azure.com/epichouse-azure" target="_blank">Azure DevOps</a>
-      <a href="https://github.com/epichouse" target="_blank">GitHub</a>
-      <a href="https://dashboard.uptimerobot.com/monitors" target="_blank">Uptime Robot</a>
-    </div>
-  </section>
-
-  </div>
 </body>
 </html>

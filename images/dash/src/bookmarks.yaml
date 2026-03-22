@@ -1,0 +1,76 @@
+sections:
+  - title: Infrastructure
+    theme: infra
+    links:
+      - name: TrueCommand
+        url: https://truecommand.epichouse.co.uk/
+      - name: Dockhand
+        url: https://dockhand.epichouse.co.uk/nagios/
+      - name: Proxmox Datacenter Manager
+        url: https://pdm.epichouse.co.uk:8443/#/dashboard
+      - name: Proxmox (London)
+        url: https://ldnpveprd1.epichouse.co.uk:8006/
+      - name: Proxmox (Manchester)
+        url: https://mcrpveprd1.epichouse.co.uk:8006/
+      - name: Proxmox Backup Server (London)
+        url: https://ldnpbsprd1.epichouse.co.uk:8007/
+      - name: Proxmox Backup Server (Manchester)
+        url: https://mcrpbsprd1.epichouse.co.uk:8007/
+      - name: TrueNAS (London)
+        url: https://ldnnasprd1.epichouse.co.uk/
+      - name: TrueNAS (Manchester)
+        url: https://mcrnasprd1.epichouse.co.uk/
+      - name: Nagios (London)
+        url: https://ldnmonprd1.epichouse.co.uk/nagios/
+      - name: Nagios (Manchester)
+        url: https://mcrmonprd1.epichouse.co.uk/nagios/
+
+  - title: Prod Applications
+    theme: prod
+    links:
+      - name: Files Web Service
+        url: https://files.epichouse.co.uk/
+      - name: Filebrowser
+        url: https://filebrowser.epichouse.co.uk/
+      - name: Gitea
+        url: https://gitea.epichouse.co.uk/
+      - name: Jellyfin
+        url: https://jellyfin.epichouse.co.uk/
+      - name: Navidrome
+        url: https://navidrome.epichouse.co.uk/
+      - name: Plex
+        url: https://plexmediaserver.epichouse.co.uk/
+      - name: Code Snippets
+        url: https://snippets.epichouse.co.uk/
+
+  - title: Test Applications
+    theme: test
+    links:
+      - name: Semaphore
+        url: https://semaphore-test.epichouse.co.uk/
+      - name: IT Tools
+        url: https://ittools.epichouse.co.uk/
+      - name: N8N
+        url: https://n8n-test.epichouse.co.uk/
+      - name: Netbox
+        url: https://netbox-test.epichouse.co.uk/
+      - name: Vert
+        url: https://vert-test.epichouse.co.uk/
+      - name: K8S Dashboard
+        url: https://tdashboard.epichouse.co.uk/
+      - name: K8S Longhorn
+        url: https://tlonghorn.epichouse.co.uk/
+
+  - title: Cloud Services
+    theme: cloud
+    links:
+      - name: Unifi Cloud Dashboard
+        url: https://unifi.ui.com
+      - name: Azure Portal
+        url: https://portal.azure.com
+      - name: Azure DevOps
+        url: https://dev.azure.com/epichouse-azure
+      - name: GitHub
+        url: https://github.com/epichouse
+      - name: Uptime Robot
+        url: https://dashboard.uptimerobot.com/monitors
