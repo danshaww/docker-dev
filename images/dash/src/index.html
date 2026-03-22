@@ -201,7 +201,30 @@
       flex-shrink: 0;
     }
 
-    #error {
+    .link-icon {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.75;
+      transition: opacity 0.15s;
+      object-fit: contain;
+    }
+
+    .link-row:hover .link-icon {
+      opacity: 1;
+    }
+
+    .link-icon.hidden {
+      display: none;
+    }
+
+    .icon-placeholder {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+
       color: #f87171;
       font-size: 0.9rem;
       margin-top: 24px;
@@ -239,8 +262,17 @@
               : [];
             const tagDataAttr = tags.map(t => t.toLowerCase()).join(',');
             const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+            const iconName = link.icon || null;
+            const iconUrl = iconName
+              ? (iconName.startsWith('http') ? iconName : `https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/${iconName}.svg`)
+              : null;
+            const iconHtml = iconUrl
+              ? `<img class="link-icon" src="${iconUrl}" alt="" onerror="this.classList.add('hidden')">`
+              : `<span class="icon-placeholder"></span>`;
+
             return `<div class="link-row" data-tags="${tagDataAttr}">
-              <a href="${link.url}" target="_blank">${link.name}</a>${tagsHtml}
+              ${iconHtml}<a href="${link.url}" target="_blank">${link.name}</a>${tagsHtml}
             </div>`;
           }).join('\n');
 

@@ -4,14 +4,19 @@ sections:
     links:
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
+        icon: proxmox
       - name: Proxmox VE (London)
         url: https://ldnpveprd1.epichouse.co.uk:8006/
+        icon: proxmox
       - name: Proxmox VE (Manchester)
         url: https://mcrpveprd1.epichouse.co.uk:8006/
+        icon: proxmox
       - name: Proxmox Backup (London)
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
+        icon: proxmox
       - name: Proxmox Backup (Manchester)
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
+        icon: proxmox
       - name: TrueNAS (London)
         url: https://ldnnasprd1.epichouse.co.uk/
       - name: TrueNAS (Manchester)
