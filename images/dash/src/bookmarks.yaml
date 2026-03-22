@@ -1,6 +1,6 @@
 sections:
   - title: Infrastructure MGMT
-    theme: orange
+    theme: red
     links:
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
