@@ -1,13 +1,554 @@
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="en">
-
+<html lang="en">
 <head>
-    <title>epichouse</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Epichouse — Server Hosting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07080d;
+      --surface: #0f1118;
+      --border: #1e2130;
+      --accent: #00e5a0;
+      --accent2: #0066ff;
+      --text: #e8eaf0;
+      --muted: #5a5f7a;
+      --glow: 0 0 40px rgba(0,229,160,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glowing orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width: 500px; height: 500px; top: -150px; left: -100px; background: rgba(0,102,255,0.12); }
+    .orb-2 { width: 400px; height: 400px; bottom: -100px; right: -80px; background: rgba(0,229,160,0.1); }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7,8,13,0.85);
+      backdrop-filter: blur(16px);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .logo span { color: var(--accent); }
+    nav ul { list-style: none; display: flex; gap: 2.5rem; }
+    nav ul a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent);
+      color: var(--bg) !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: box-shadow 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { box-shadow: 0 0 20px rgba(0,229,160,0.4); transform: translateY(-1px); }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 7rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      position: relative;
+    }
+    h1 em::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 0.9rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { box-shadow: 0 0 30px rgba(0,229,160,0.5); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Stats bar */
+    .stats-bar {
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+    .stat {
+      flex: 1; min-width: 140px;
+      padding: 1.8rem 2rem;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      color: var(--accent);
+      display: block;
+    }
+    .stat-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Features */
+    .section {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 3.5rem;
+      line-height: 1.15;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .feature-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+    .feature-card:hover { background: #141720; }
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+    }
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+    }
+    .feature-card p {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .plan {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .plan:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--glow); }
+    .plan.featured {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, #0f1118, #0d1a16);
+    }
+    .plan-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin-bottom: 0.4rem;
+    }
+    .plan-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+    .plan-price sup { font-size: 1rem; vertical-align: top; margin-top: 0.4rem; display: inline-block; }
+    .plan-price span { font-size: 0.9rem; color: var(--muted); font-weight: 400; }
+    .plan ul { list-style: none; margin-bottom: 2rem; }
+    .plan ul li {
+      font-size: 0.82rem;
+      color: var(--muted);
+      padding: 0.45rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0.6rem;
+    }
+    .plan ul li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+
+    /* Terminal section */
+    .terminal-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .terminal-bar {
+      background: #1a1d2a;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .t-dot:nth-child(1) { background: #ff5f57; }
+    .t-dot:nth-child(2) { background: #febc2e; }
+    .t-dot:nth-child(3) { background: #28c840; }
+    .terminal-body {
+      padding: 1.5rem 2rem;
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+    .t-prompt { color: var(--accent); }
+    .t-cmd { color: var(--text); }
+    .t-output { color: var(--muted); }
+    .t-success { color: #28c840; }
+    .cursor {
+      display: inline-block;
+      width: 8px; height: 1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* Footer */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer p { color: var(--muted); font-size: 0.78rem; }
+    footer a { color: var(--muted); text-decoration: none; font-size: 0.78rem; }
+    footer a:hover { color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-    <body style="background-color:black;">
-        <font face="Lucida Console">
-            <h1 style="color:grey">epichouse</h1>
-        </font>
-    </body>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="logo">Epic<span>house</span></div>
+  <ul>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Status</a></li>
+    <li><a href="#" class="nav-cta">Deploy Now</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    All systems operational
+  </div>
+  <h1>Server hosting<br>built for <em>speed</em></h1>
+  <p class="hero-sub">
+    Deploy game servers, web apps, and backends in seconds. Epichouse runs on bare metal infrastructure so your players and users never wait.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary">Start Free Trial</button>
+    <button class="btn-secondary">View Pricing →</button>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num">99.99%</span><span class="stat-label">Uptime SLA</span></div>
+  <div class="stat"><span class="stat-num">&lt;5ms</span><span class="stat-label">Network Latency</span></div>
+  <div class="stat"><span class="stat-num">12</span><span class="stat-label">Global Regions</span></div>
+  <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Expert Support</span></div>
+  <div class="stat"><span class="stat-num">50K+</span><span class="stat-label">Servers Deployed</span></div>
+</div>
+
+<!-- Features -->
+<section class="section">
+  <p class="section-label">// Why Epichouse</p>
+  <h2 class="section-title">Everything you need to<br>run at scale</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Instant Provisioning</h3>
+      <p>Spin up a server in under 30 seconds. Our orchestration layer pre-warms hardware so you're never waiting on cold boots.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>DDoS Protection</h3>
+      <p>10Tbps network-level mitigation included on all plans. Scrubbing centres in every region, zero configuration needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📦</div>
+      <h3>One-Click Modpacks</h3>
+      <p>Minecraft, Rust, Valheim, ARK — deploy popular games with mod support pre-configured, ready to invite friends.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Real-Time Metrics</h3>
+      <p>CPU, RAM, network, and player count dashboards with sub-second refresh. Set alerts via Discord, Slack, or email.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Automated Backups</h3>
+      <p>Hourly snapshots retained for 30 days. One-click restore means a griefed world or bad update is never permanent.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔧</div>
+      <h3>Full Root Access</h3>
+      <p>SSH, SFTP, and a web-based terminal included. Run custom scripts, install any software, total control of your stack.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Terminal -->
+<section class="section" style="padding-top: 0;">
+  <p class="section-label">// Deploy in seconds</p>
+  <h2 class="section-title">CLI-first experience</h2>
+  <div class="terminal-wrap">
+    <div class="terminal-bar">
+      <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
+      <span style="color:#5a5f7a; font-size:0.78rem; margin-left:0.5rem;">epichouse — bash</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-prompt">$ </span><span class="t-cmd">npm install -g epichouse-cli</span></div>
+      <div class="t-output">→ Installing epichouse-cli@3.1.4...</div>
+      <div class="t-success">✓ epichouse-cli installed successfully</div>
+      <br>
+      <div><span class="t-prompt">$ </span><span class="t-cmd">epichouse deploy --game minecraft --region eu-west</span></div>
+      <div class="t-output">→ Selecting optimal node in eu-west-2...</div>
+      <div class="t-output">→ Provisioning 8GB RAM bare metal instance...</div>
+      <div class="t-output">→ Installing Paper 1.21.4...</div>
+      <div class="t-success">✓ Server live at play.epichouse.gg:25565</div>
+      <div><span class="t-prompt">$ </span><span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section">
+  <p class="section-label">// Pricing</p>
+  <h2 class="section-title">Simple, honest pricing</h2>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Starter</div>
+      <div class="plan-price"><sup>£</sup>4<span>/mo</span></div>
+      <ul>
+        <li>2GB RAM</li>
+        <li>2 vCPU cores</li>
+        <li>20GB NVMe SSD</li>
+        <li>1Gbps uplink</li>
+        <li>Community support</li>
+      </ul>
+      <button class="btn-secondary" style="width:100%">Get Started</button>
+    </div>
+    <div class="plan featured">
+      <div class="plan-badge">Most Popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price"><sup>£</sup>12<span>/mo</span></div>
+      <ul>
+        <li>8GB RAM</li>
+        <li>4 vCPU cores</li>
+        <li>80GB NVMe SSD</li>
+        <li>10Gbps uplink</li>
+        <li>Priority support</li>
+        <li>Automated backups</li>
+      </ul>
+      <button class="btn-primary" style="width:100%">Get Started</button>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Ultra</div>
+      <div class="plan-price"><sup>£</sup>28<span>/mo</span></div>
+      <ul>
+        <li>16GB RAM</li>
+        <li>8 vCPU cores</li>
+        <li>200GB NVMe SSD</li>
+        <li>10Gbps uplink</li>
+        <li>Dedicated support agent</li>
+        <li>Custom domain included</li>
+      </ul>
+      <button class="btn-secondary" style="width:100%">Get Started</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="logo" style="font-size:1.1rem">Epic<span style="color:var(--accent)">house</span></div>
+  <p>© 2026 Epichouse Ltd. All rights reserved.</p>
+  <div style="display:flex; gap:2rem;">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Status</a>
+    <a href="#">Discord</a>
+  </div>
+</footer>
+
+</body>
 </html>
