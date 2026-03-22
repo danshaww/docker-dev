@@ -1,6 +1,6 @@
 sections:
   - title: Infrastructure
-    theme: infra
+    theme: orange
     links:
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
@@ -8,25 +8,25 @@ sections:
         url: https://dockhand.epichouse.co.uk/nagios/
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
-      - name: Proxmox (London)
+      - name: Proxmox (LDN)
         url: https://ldnpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox (Manchester)
+      - name: Proxmox (MCR)
         url: https://mcrpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox Backup Server (London)
+      - name: Proxmox Backup Server (LDN)
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
-      - name: Proxmox Backup Server (Manchester)
+      - name: Proxmox Backup Server (MCR)
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
-      - name: TrueNAS (London)
+      - name: TrueNAS (LDN)
         url: https://ldnnasprd1.epichouse.co.uk/
-      - name: TrueNAS (Manchester)
+      - name: TrueNAS (MCR)
         url: https://mcrnasprd1.epichouse.co.uk/
-      - name: Nagios (London)
+      - name: Nagios (LDN)
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
-      - name: Nagios (Manchester)
+      - name: Nagios (MCR)
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
 
   - title: Prod Applications
-    theme: prod
+    theme: green
     links:
       - name: Files Web Service
         url: https://files.epichouse.co.uk/
@@ -44,7 +44,7 @@ sections:
         url: https://snippets.epichouse.co.uk/
 
   - title: Test Applications
-    theme: test
+    theme: purple
     links:
       - name: Semaphore
         url: https://semaphore-test.epichouse.co.uk/
@@ -62,7 +62,7 @@ sections:
         url: https://tlonghorn.epichouse.co.uk/
 
   - title: Cloud Services
-    theme: cloud
+    theme: cyan
     links:
       - name: Unifi Cloud Dashboard
         url: https://unifi.ui.com
