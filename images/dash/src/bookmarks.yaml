@@ -4,30 +4,22 @@ sections:
     links:
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
-      - name: Proxmox VE
+      - name: Proxmox VE LDN
         url: https://ldnpveprd1.epichouse.co.uk:8006/
-        tags: [LDN]
-      - name: Proxmox VE
+      - name: Proxmox VE MCR
         url: https://mcrpveprd1.epichouse.co.uk:8006/
-        tags: [MCR]
-      - name: Proxmox Backup Server
+      - name: Proxmox Backup LDN
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
-        tags: [LDN]
-      - name: Proxmox Backup Server
+      - name: Proxmox Backup MCR
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
-        tags: [MCR]
-      - name: TrueNAS
+      - name: TrueNAS LDN
         url: https://ldnnasprd1.epichouse.co.uk/
-        tags: [LDN]
-      - name: TrueNAS
+      - name: TrueNAS MCR
         url: https://mcrnasprd1.epichouse.co.uk/
-        tags: [MCR]
-      - name: Nagios
+      - name: Nagios LDN
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
-        tags: [LDN]
-      - name: Nagios
+      - name: Nagios MCR
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
-        tags: [MCR]
 
   - title: Prod Applications
     theme: green
@@ -48,10 +40,8 @@ sections:
         url: https://snippets.epichouse.co.uk/
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
-        tags: [MGMT]
       - name: Dockhand
         url: https://dockhand.epichouse.co.uk/nagios/
-        tags: [MGMT]
 
   - title: Test Applications
     theme: purple
