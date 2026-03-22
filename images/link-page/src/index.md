@@ -11,15 +11,15 @@
 **[TrueCommand](https://truecommand.epichouse.co.uk/)**  
 **[Dockhand](https://dockhand.epichouse.co.uk/nagios/)**  
 ### London
-**[Proxmox (London)](https://ldnpveprd1.epichouse.co.uk:8006/)**  
-**[Proxmox Backup Server (London)](https://ldnpbsprd1.epichouse.co.uk:8007/)**  
-**[TrueNAS (London)](https://ldnnasprd1.epichouse.co.uk/)**  
-**[Nagios (London)](https://ldnmonprd1.epichouse.co.uk/nagios/)**  
-### Manchester
-**[Proxmox (Manchester)](https://mcrpveprd1.epichouse.co.uk:8006/)**  
-**[Proxmox Backup Server (Manchester)](https://mcrpbsprd1.epichouse.co.uk:8007/)**  
-**[TrueNAS (Manchester)](https://mcrnasprd1.epichouse.co.uk/)**  
-**[Nagios (Manchester)](https://mcrmonprd1.epichouse.co.uk/nagios/)**  
+**[Proxmox Datacenter Manager](https://pdm.epichouse.co.uk:8443/#/dashboard)**  
+**[Proxmox (LDN)](https://ldnpveprd1.epichouse.co.uk:8006/)**  
+**[Proxmox (MCR)](https://mcrpveprd1.epichouse.co.uk:8006/)**  
+**[Proxmox Backup Server (LDN)](https://ldnpbsprd1.epichouse.co.uk:8007/)**  
+**[Proxmox Backup Server (MCR)](https://mcrpbsprd1.epichouse.co.uk:8007/)**  
+**[TrueNAS (LDN)](https://ldnnasprd1.epichouse.co.uk/)**  
+**[TrueNAS (MCR)](https://mcrnasprd1.epichouse.co.uk/)**  
+**[Nagios (LDN)](https://ldnmonprd1.epichouse.co.uk/nagios/)**  
+**[Nagios (MCR)](https://mcrmonprd1.epichouse.co.uk/nagios/)**  
 
 ## Prod Applications
 **[Files Web Service](https://files.epichouse.co.uk/)**  
