@@ -19,67 +19,94 @@ sections:
         icon: proxmox
       - name: TrueNAS (London)
         url: https://ldnnasprd1.epichouse.co.uk/
+        icon: truenas
       - name: TrueNAS (Manchester)
         url: https://mcrnasprd1.epichouse.co.uk/
+        icon: truenas
       - name: Scrutiny (London)
         url: http://10.100.0.15:31054
+        icon: scrutiny
       - name: Scrutiny (Manchester)
         url: http://10.0.0.31:31054
+        icon: scrutiny
       - name: Nagios (London)
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
+        icon: nagios
       - name: Nagios (Manchester)
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
+        icon: nagios
 
   - title: Prod Applications
     theme: green
     links:
       - name: Files Web Service
         url: https://files.epichouse.co.uk/
+        icon: files
       - name: Filebrowser
         url: https://filebrowser.epichouse.co.uk/
+        icon: filebrowser
       - name: Gitea
         url: https://gitea.epichouse.co.uk/
+        icon: gitea
       - name: Jellyfin
         url: https://jellyfin.epichouse.co.uk/
+        icon: jellyfin
       - name: Navidrome
         url: https://navidrome.epichouse.co.uk/
+        icon: navidrome
       - name: Plex
         url: https://plexmediaserver.epichouse.co.uk/
+        icon: plex
       - name: Code Snippets
         url: https://snippets.epichouse.co.uk/
+        icon: snippetbox
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
+        icon: truecommand
       - name: Dockhand
         url: https://dockhand.epichouse.co.uk/nagios/
+        icon: dockhand
 
   - title: Test Applications
     theme: purple
     links:
       - name: Semaphore
         url: https://semaphore-test.epichouse.co.uk/
+        icon: semaphore
       - name: IT Tools
         url: https://ittools.epichouse.co.uk/
+        icon: it-tools
       - name: N8N
         url: https://n8n-test.epichouse.co.uk/
+        icon: n8n
       - name: Netbox
         url: https://netbox-test.epichouse.co.uk/
+        icon: netbox
       - name: Vert
         url: https://vert-test.epichouse.co.uk/
+        icon: https://avatars.githubusercontent.com/u/198117259?s=280&v=4
       - name: K8S Dashboard
         url: https://tdashboard.epichouse.co.uk/
+        icon: kubernetes
       - name: K8S Longhorn
         url: https://tlonghorn.epichouse.co.uk/
+        icon: longhorn
 
   - title: Cloud Services
     theme: cyan
     links:
       - name: Unifi Cloud Dashboard
         url: https://unifi.ui.com
+        icon: unifi
       - name: Azure Portal
         url: https://portal.azure.com
+        icon: azure
       - name: Azure DevOps
         url: https://dev.azure.com/epichouse-azure
+        icon: azure-devops
       - name: GitHub
         url: https://github.com/epichouse
+        icon: github
       - name: Uptime Robot
         url: https://dashboard.uptimerobot.com/monitors
+        icon: uptimerobot
