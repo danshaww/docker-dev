@@ -20,6 +20,33 @@
       --pill-border: #252b3d;
     }
 
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f5f7;
+        --surface: #ffffff;
+        --border: #d1d5db;
+        --text: #111827;
+        --muted: #6b7280;
+      }
+
+      header p { color: #374151 !important; }
+
+      .cloud .dot   { background: #0284c7; box-shadow: 0 0 6px #0284c788; }
+      .infra .dot   { background: #ea580c; box-shadow: 0 0 6px #ea580c88; }
+      .prod .dot    { background: #16a34a; box-shadow: 0 0 6px #16a34a88; }
+      .test .dot    { background: #9333ea; box-shadow: 0 0 6px #9333ea88; }
+
+      .section-header h2 { color: #9ca3af; }
+      .section-header::after { background: #e5e7eb; }
+
+      .links a { color: #4b5563; }
+
+      .cloud .links a:hover  { color: #0284c7; }
+      .infra .links a:hover  { color: #ea580c; }
+      .prod .links a:hover   { color: #16a34a; }
+      .test .links a:hover   { color: #9333ea; }
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
