@@ -1,11 +1,7 @@
 sections:
-  - title: Infrastructure
+  - title: Infrastructure MGMT
     theme: orange
     links:
-      - name: TrueCommand
-        url: https://truecommand.epichouse.co.uk/
-      - name: Dockhand
-        url: https://dockhand.epichouse.co.uk/nagios/
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
       - name: Proxmox VE
@@ -50,6 +46,12 @@ sections:
         url: https://plexmediaserver.epichouse.co.uk/
       - name: Code Snippets
         url: https://snippets.epichouse.co.uk/
+      - name: TrueCommand
+        url: https://truecommand.epichouse.co.uk/
+        tags: [MGMT]
+      - name: Dockhand
+        url: https://dockhand.epichouse.co.uk/nagios/
+        tags: [MGMT]
 
   - title: Test Applications
     theme: purple
