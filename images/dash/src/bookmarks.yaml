@@ -53,7 +53,7 @@ sections:
         icon: jellyfin
       - name: Navidrome
         url: https://navidrome.epichouse.co.uk/
-        icon: navidrome.png
+        icon: navidrome
       - name: Plex
         url: https://plexmediaserver.epichouse.co.uk/
         icon: plex
