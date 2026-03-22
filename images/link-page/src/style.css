@@ -8,13 +8,13 @@
 /* CSS Custom Properties for light and dark themes */
 :root {
     --bg-color: #f8f9fa;
-    --container-bg: white;
+    --container-bg: #f8f9fa;
     --text-color: #333;
     --heading-color: #2c3e50;
     --heading-secondary: #4fa6f7;
     --nav-bg: #f8f9fa;
     --nav-text: #f8f9fa;
-    --nav-accent: #3498db;
+    --nav-accent: #f8f9fa;
     --link-color: #333;
     --link-hover: #333;
     --code-bg: #f4f4f4;
