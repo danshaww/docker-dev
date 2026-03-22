@@ -1,6 +1,6 @@
 site_name: Homelab Documentation
 docs_dir: /docs/documentation
-repo_url: https://gitea.internal.epichouse.co.uk/dan/homelab-mgmt
+repo_url: https://gitea.epichouse.co.uk/dan/homelab-mgmt
 repo_name: homelab-mgmt
 
 theme:

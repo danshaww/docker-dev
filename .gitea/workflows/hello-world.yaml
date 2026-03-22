@@ -17,7 +17,7 @@ on:
 env:
   image_name: hello-world
   build_path: images/hello-world
-  registry: gitea.internal.epichouse.co.uk
+  registry: gitea.epichouse.co.uk
   owner: dan
 
 jobs:

@@ -6,7 +6,7 @@ on:
 env:
   image_name: mkdocs
   build_path: images/mkdocs
-  registry: gitea.internal.epichouse.co.uk
+  registry: gitea.epichouse.co.uk
   owner: dan
 
 jobs:

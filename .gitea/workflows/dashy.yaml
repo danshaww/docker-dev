@@ -17,7 +17,7 @@ on:
 env:
   image_name: dashy
   build_path: images/dashy
-  registry: gitea.internal.epichouse.co.uk
+  registry: gitea.epichouse.co.uk
   owner: dan
 
 jobs:
