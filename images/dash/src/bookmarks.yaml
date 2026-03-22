@@ -8,22 +8,30 @@ sections:
         url: https://dockhand.epichouse.co.uk/nagios/
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
-      - name: Proxmox (LDN)
+      - name: Proxmox (London)
         url: https://ldnpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox (MCR)
+        tags: [London]
+      - name: Proxmox
         url: https://mcrpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox Backup Server (LDN)
+        tags: [Manchester]
+      - name: PBS (London)
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
-      - name: Proxmox Backup Server (MCR)
+        tags: [London]
+      - name: Proxmox Backup Server
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
-      - name: TrueNAS (LDN)
+        tags: [Manchester]
+      - name: TrueNAS (London)
         url: https://ldnnasprd1.epichouse.co.uk/
-      - name: TrueNAS (MCR)
+        tags: [London]
+      - name: TrueNAS (Manchester)
         url: https://mcrnasprd1.epichouse.co.uk/
-      - name: Nagios (LDN)
+        tags: [Manchester]
+      - name: Nagios (London)
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
-      - name: Nagios (MCR)
+        tags: [London]
+      - name: Nagios (Manchester)
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
+        tags: [Manchester]
 
   - title: Prod Applications
     theme: green

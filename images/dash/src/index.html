@@ -23,6 +23,13 @@
       --border: #1e2230;
       --text: #e2e8f0;
       --muted: #6b7280;
+      --tag-bg: #1e2230;
+      --tag-text: #94a3b8;
+      --tag-border: #2d3748;
+      --filter-bg: #161a24;
+      --filter-active-bg: #2d3748;
+      --filter-text: #94a3b8;
+      --filter-active-text: #e2e8f0;
     }
 
     @media (prefers-color-scheme: light) {
@@ -32,6 +39,13 @@
         --border: #d1d5db;
         --text: #111827;
         --muted: #6b7280;
+        --tag-bg: #e5e7eb;
+        --tag-text: #4b5563;
+        --tag-border: #d1d5db;
+        --filter-bg: #e5e7eb;
+        --filter-active-bg: #d1d5db;
+        --filter-text: #6b7280;
+        --filter-active-text: #111827;
       }
 
       header p { color: #374151 !important; }
@@ -71,7 +85,7 @@
     }
 
     header {
-      margin-bottom: 48px;
+      margin-bottom: 24px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
     }
@@ -82,6 +96,39 @@
       color: #a0aec0;
       letter-spacing: 1px;
       text-transform: uppercase;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 36px;
+    }
+
+    .filter-btn {
+      padding: 4px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--tag-border);
+      background: var(--filter-bg);
+      color: var(--filter-text);
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .filter-btn:hover {
+      color: var(--filter-active-text);
+      border-color: #4b5563;
+    }
+
+    .filter-btn.active {
+      background: var(--filter-active-bg);
+      color: var(--filter-active-text);
+      border-color: #4b5563;
     }
 
     .sections-grid {
@@ -146,6 +193,16 @@
       gap: 6px;
     }
 
+    .link-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-row.hidden {
+      display: none;
+    }
+
     .links a {
       display: inline-block;
       color: #cbd5e1 !important;
@@ -164,6 +221,21 @@
     .theme-yellow .links a:hover { color: #eab308 !important; }
     .theme-teal   .links a:hover { color: #14b8a6 !important; }
 
+    .tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--tag-text);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     #error {
       color: #f87171;
       font-size: 0.9rem;
@@ -177,6 +249,7 @@
     <p>Internal Services Dashboard</p>
   </header>
 
+  <div class="filters" id="filters"></div>
   <div class="sections-grid" id="grid"></div>
   <p id="error" style="display:none"></p>
 
@@ -189,21 +262,72 @@
       .then(text => {
         const data = jsyaml.load(text);
         const grid = document.getElementById('grid');
+        const filtersEl = document.getElementById('filters');
 
+        // Collect all unique tags
+        const allTags = new Set();
         data.sections.forEach(section => {
-          const theme = section.theme || 'cloud';
+          section.links.forEach(link => {
+            if (link.tags) {
+              (Array.isArray(link.tags) ? link.tags : [link.tags])
+                .forEach(t => allTags.add(t.toLowerCase()));
+            }
+          });
+        });
+
+        // Build filter buttons if tags exist
+        if (allTags.size > 0) {
+          const allBtn = document.createElement('button');
+          allBtn.className = 'filter-btn active';
+          allBtn.textContent = 'All';
+          allBtn.addEventListener('click', () => setFilter(null, allBtn));
+          filtersEl.appendChild(allBtn);
+
+          [...allTags].sort().forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.textContent = tag;
+            btn.addEventListener('click', () => setFilter(tag, btn));
+            filtersEl.appendChild(btn);
+          });
+        }
+
+        function setFilter(tag, btn) {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.querySelectorAll('.link-row').forEach(row => {
+            if (!tag) {
+              row.classList.remove('hidden');
+            } else {
+              const rowTags = (row.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+              row.classList.toggle('hidden', !rowTags.includes(tag));
+            }
+          });
+        }
+
+        // Render sections
+        data.sections.forEach(section => {
+          const theme = section.theme || 'cyan';
           const el = document.createElement('section');
           el.className = `section theme-${theme}`;
+
+          const linksHtml = section.links.map(link => {
+            const tags = link.tags
+              ? (Array.isArray(link.tags) ? link.tags : [link.tags])
+              : [];
+            const tagDataAttr = tags.map(t => t.toLowerCase()).join(',');
+            const tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+            return `<div class="link-row" data-tags="${tagDataAttr}">
+              <a href="${link.url}" target="_blank">${link.name}</a>${tagsHtml}
+            </div>`;
+          }).join('\n');
+
           el.innerHTML = `
             <div class="section-header">
               <span class="dot"></span>
               <h2>${section.title}</h2>
             </div>
-            <div class="links">
-              ${section.links.map(link =>
-                `<a href="${link.url}" target="_blank">${link.name}</a>`
-              ).join('\n')}
-            </div>
+            <div class="links">${linksHtml}</div>
           `;
           grid.appendChild(el);
         });
