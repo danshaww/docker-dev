@@ -10,7 +10,6 @@
 ## Infrastructure
 **[TrueCommand](https://truecommand.epichouse.co.uk/)**  
 **[Dockhand](https://dockhand.epichouse.co.uk/nagios/)**  
-### London
 **[Proxmox Datacenter Manager](https://pdm.epichouse.co.uk:8443/#/dashboard)**  
 **[Proxmox (LDN)](https://ldnpveprd1.epichouse.co.uk:8006/)**  
 **[Proxmox (MCR)](https://mcrpveprd1.epichouse.co.uk:8006/)**  
