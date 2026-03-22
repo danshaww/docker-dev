@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 
 env:
-  image_name: link-page
+  image_name: dash
   build_path: ./
   registry: gitea.epichouse.co.uk
   owner: dan
