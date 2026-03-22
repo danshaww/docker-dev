@@ -98,38 +98,6 @@
       text-transform: uppercase;
     }
 
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 36px;
-    }
-
-    .filter-btn {
-      padding: 4px 12px;
-      border-radius: 4px;
-      border: 1px solid var(--tag-border);
-      background: var(--filter-bg);
-      color: var(--filter-text);
-      font-family: 'Roboto', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-    }
-
-    .filter-btn:hover {
-      color: var(--filter-active-text);
-      border-color: #4b5563;
-    }
-
-    .filter-btn.active {
-      background: var(--filter-active-bg);
-      color: var(--filter-active-text);
-      border-color: #4b5563;
-    }
 
     .sections-grid {
       display: grid;
@@ -199,9 +167,6 @@
       gap: 8px;
     }
 
-    .link-row.hidden {
-      display: none;
-    }
 
     .links a {
       display: inline-block;
@@ -249,7 +214,6 @@
     <p>Internal Services Dashboard</p>
   </header>
 
-  <div class="filters" id="filters"></div>
   <div class="sections-grid" id="grid"></div>
   <p id="error" style="display:none"></p>
 
@@ -262,48 +226,6 @@
       .then(text => {
         const data = jsyaml.load(text);
         const grid = document.getElementById('grid');
-        const filtersEl = document.getElementById('filters');
-
-        // Collect all unique tags
-        const allTags = new Set();
-        data.sections.forEach(section => {
-          section.links.forEach(link => {
-            if (link.tags) {
-              (Array.isArray(link.tags) ? link.tags : [link.tags])
-                .forEach(t => allTags.add(t.toLowerCase()));
-            }
-          });
-        });
-
-        // Build filter buttons if tags exist
-        if (allTags.size > 0) {
-          const allBtn = document.createElement('button');
-          allBtn.className = 'filter-btn active';
-          allBtn.textContent = 'All';
-          allBtn.addEventListener('click', () => setFilter(null, allBtn));
-          filtersEl.appendChild(allBtn);
-
-          [...allTags].sort().forEach(tag => {
-            const btn = document.createElement('button');
-            btn.className = 'filter-btn';
-            btn.textContent = tag;
-            btn.addEventListener('click', () => setFilter(tag, btn));
-            filtersEl.appendChild(btn);
-          });
-        }
-
-        function setFilter(tag, btn) {
-          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          document.querySelectorAll('.link-row').forEach(row => {
-            if (!tag) {
-              row.classList.remove('hidden');
-            } else {
-              const rowTags = (row.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
-              row.classList.toggle('hidden', !rowTags.includes(tag));
-            }
-          });
-        }
 
         // Render sections
         data.sections.forEach(section => {
