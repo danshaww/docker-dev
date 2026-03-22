@@ -4,21 +4,21 @@ sections:
     links:
       - name: Proxmox Datacenter Manager
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
-      - name: Proxmox VE LDN
+      - name: Proxmox VE (London)
         url: https://ldnpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox VE MCR
+      - name: Proxmox VE (Manchester)
         url: https://mcrpveprd1.epichouse.co.uk:8006/
-      - name: Proxmox Backup LDN
+      - name: Proxmox Backup (London)
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
-      - name: Proxmox Backup MCR
+      - name: Proxmox Backup (Manchester)
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
-      - name: TrueNAS LDN
+      - name: TrueNAS (London)
         url: https://ldnnasprd1.epichouse.co.uk/
-      - name: TrueNAS MCR
+      - name: TrueNAS (Manchester)
         url: https://mcrnasprd1.epichouse.co.uk/
-      - name: Nagios LDN
+      - name: Nagios (London)
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
-      - name: Nagios MCR
+      - name: Nagios (Manchester)
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
 
   - title: Prod Applications
