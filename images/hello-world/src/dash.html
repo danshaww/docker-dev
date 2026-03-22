@@ -64,7 +64,7 @@
       font-family: 'Roboto', sans-serif;
       min-height: 100vh;
       padding: 48px 32px;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
 
     }
@@ -156,17 +156,25 @@
 
     .links a {
       display: inline-block;
-      color: var(--muted);
+      color: #6b7280 !important;
       text-decoration: none;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 400;
       transition: color 0.15s;
     }
 
-    .cloud .links a:hover  { color: #00e5ff; }
-    .infra .links a:hover  { color: #f97316; }
-    .prod .links a:hover   { color: #22c55e; }
-    .test .links a:hover   { color: #a855f7; }
+    .cloud .links a:hover  { color: #00e5ff !important; }
+    .infra .links a:hover  { color: #f97316 !important; }
+    .prod .links a:hover   { color: #22c55e !important; }
+    .test .links a:hover   { color: #a855f7 !important; }
+
+    @media (prefers-color-scheme: light) {
+      .links a { color: #4b5563 !important; }
+      .cloud .links a:hover  { color: #0284c7 !important; }
+      .infra .links a:hover  { color: #ea580c !important; }
+      .prod .links a:hover   { color: #16a34a !important; }
+      .test .links a:hover   { color: #9333ea !important; }
+    }
   </style>
 </head>
 <body>
