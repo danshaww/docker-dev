@@ -59,13 +59,13 @@ sections:
         icon: plex
       - name: Code Snippets
         url: https://snippets.epichouse.co.uk/
-        icon: snippetbox
+        icon: https://snippets.epichouse.co.uk/logo.png
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
         icon: truecommand
       - name: Dockhand
         url: https://dockhand.epichouse.co.uk/nagios/
-        icon: dockhand
+        icon: https://dockhand.epichouse.co.uk/logo-dark.webp
 
   - title: Test Applications
     theme: purple
