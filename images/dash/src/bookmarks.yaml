@@ -10,28 +10,28 @@ sections:
         url: https://pdm.epichouse.co.uk:8443/#/dashboard
       - name: Proxmox VE
         url: https://ldnpveprd1.epichouse.co.uk:8006/
-        tags: [London]
+        tags: [LDN]
       - name: Proxmox VE
         url: https://mcrpveprd1.epichouse.co.uk:8006/
-        tags: [Manchester]
+        tags: [MCR]
       - name: Proxmox Backup Server
         url: https://ldnpbsprd1.epichouse.co.uk:8007/
-        tags: [London]
+        tags: [LDN]
       - name: Proxmox Backup Server
         url: https://mcrpbsprd1.epichouse.co.uk:8007/
-        tags: [Manchester]
+        tags: [MCR]
       - name: TrueNAS
         url: https://ldnnasprd1.epichouse.co.uk/
-        tags: [London]
+        tags: [LDN]
       - name: TrueNAS
         url: https://mcrnasprd1.epichouse.co.uk/
-        tags: [Manchester]
+        tags: [MCR]
       - name: Nagios
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
-        tags: [London]
+        tags: [LDN]
       - name: Nagios
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
-        tags: [Manchester]
+        tags: [MCR]
 
   - title: Prod Applications
     theme: green
