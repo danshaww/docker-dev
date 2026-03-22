@@ -16,6 +16,10 @@ sections:
         url: https://ldnnasprd1.epichouse.co.uk/
       - name: TrueNAS (Manchester)
         url: https://mcrnasprd1.epichouse.co.uk/
+      - name: Scrutiny (London)
+        url: http://10.0.0.15:31054
+      - name: Scrutiny (Manchester)
+        url: http://10.100.0.31:31054
       - name: Nagios (London)
         url: https://ldnmonprd1.epichouse.co.uk/nagios/
       - name: Nagios (Manchester)
