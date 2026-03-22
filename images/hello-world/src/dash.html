@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --border: #1e2230;
+      --accent: #00e5ff;
+      --accent2: #7b61ff;
+      --text: #e2e8f0;
+      --muted: #6b7280;
+      --pill-bg: #161a24;
+      --pill-hover: #1e2538;
+      --pill-border: #252b3d;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      padding: 48px 32px;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 10% 0%, rgba(0,229,255,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 90% 100%, rgba(123,97,255,0.07) 0%, transparent 60%);
+    }
+
+    header {
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 6px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .sections-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .sections-grid { grid-template-columns: 1fr; }
+    }
+
+    .section {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-header h2 {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .cloud .dot   { background: #00e5ff; box-shadow: 0 0 6px #00e5ff88; }
+    .infra .dot   { background: #f97316; box-shadow: 0 0 6px #f9731688; }
+    .prod .dot    { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+    .test .dot    { background: #a855f7; box-shadow: 0 0 6px #a855f788; }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--pill-bg);
+      border: 1px solid var(--pill-border);
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+
+    .links a::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+
+    .cloud .links a::before  { background: #00e5ff; }
+    .infra .links a::before  { background: #f97316; }
+    .prod .links a::before   { background: #22c55e; }
+    .test .links a::before   { background: #a855f7; }
+
+    .links a:hover {
+      background: var(--pill-hover);
+      border-color: #3a4260;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .cloud .links a:hover  { border-color: #00e5ff44; color: #00e5ff; }
+    .infra .links a:hover  { border-color: #f9731644; color: #f97316; }
+    .prod .links a:hover   { border-color: #22c55e44; color: #22c55e; }
+    .test .links a:hover   { border-color: #a855f744; color: #a855f7; }
+
+    .links a:hover::before { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <!-- <h1>Welcome</h1> -->
+    <p>Internal Services Dashboard</p>
+  </header>
+
+  <div class="sections-grid">
+
+
+
+  <section class="section infra">
+    <div class="section-header">
+      <span class="dot"></span>
+      <h2>Infrastructure</h2>
+    </div>
+    <div class="links">
+      <a href="https://truecommand.epichouse.co.uk/" target="_blank">TrueCommand</a>
+      <a href="https://dockhand.epichouse.co.uk/nagios/" target="_blank">Dockhand</a>
+      <a href="https://pdm.epichouse.co.uk:8443/#/dashboard" target="_blank">Proxmox Datacenter Manager</a>
+      <a href="https://ldnpveprd1.epichouse.co.uk:8006/" target="_blank">Proxmox (LDN)</a>
+      <a href="https://mcrpveprd1.epichouse.co.uk:8006/" target="_blank">Proxmox (MCR)</a>
+      <a href="https://ldnpbsprd1.epichouse.co.uk:8007/" target="_blank">PBS (LDN)</a>
+      <a href="https://mcrpbsprd1.epichouse.co.uk:8007/" target="_blank">PBS (MCR)</a>
+      <a href="https://ldnnasprd1.epichouse.co.uk/" target="_blank">TrueNAS (LDN)</a>
+      <a href="https://mcrnasprd1.epichouse.co.uk/" target="_blank">TrueNAS (MCR)</a>
+      <a href="https://ldnmonprd1.epichouse.co.uk/nagios/" target="_blank">Nagios (LDN)</a>
+      <a href="https://mcrmonprd1.epichouse.co.uk/nagios/" target="_blank">Nagios (MCR)</a>
+    </div>
+  </section>
+
+  <section class="section prod">
+    <div class="section-header">
+      <span class="dot"></span>
+      <h2>Prod Applications</h2>
+    </div>
+    <div class="links">
+      <a href="https://files.epichouse.co.uk/" target="_blank">Files Web Service</a>
+      <a href="https://filebrowser.epichouse.co.uk/" target="_blank">Filebrowser</a>
+      <a href="https://gitea.epichouse.co.uk/" target="_blank">Gitea</a>
+      <a href="https://jellyfin.epichouse.co.uk/" target="_blank">Jellyfin</a>
+      <a href="https://navidrome.epichouse.co.uk/" target="_blank">Navidrome</a>
+      <a href="https://plexmediaserver.epichouse.co.uk/" target="_blank">Plex</a>
+      <a href="https://snippets.epichouse.co.uk/" target="_blank">Code Snippets</a>
+    </div>
+  </section>
+
+  <section class="section test">
+    <div class="section-header">
+      <span class="dot"></span>
+      <h2>Test Applications</h2>
+    </div>
+    <div class="links">
+      <a href="https://semaphore-test.epichouse.co.uk/" target="_blank">Semaphore</a>
+      <a href="https://ittools.epichouse.co.uk/" target="_blank">IT Tools</a>
+      <a href="https://n8n-test.epichouse.co.uk/" target="_blank">N8N</a>
+      <a href="https://netbox-test.epichouse.co.uk/" target="_blank">Netbox</a>
+      <a href="https://vert-test.epichouse.co.uk/" target="_blank">Vert</a>
+      <a href="https://tdashboard.epichouse.co.uk/" target="_blank">K8S Dashboard</a>
+      <a href="https://tlonghorn.epichouse.co.uk/" target="_blank">K8S Longhorn</a>
+    </div>
+  </section>
+
+  <section class="section cloud">
+    <div class="section-header">
+      <span class="dot"></span>
+      <h2>Cloud Services</h2>
+    </div>
+    <div class="links">
+      <a href="https://unifi.ui.com" target="_blank">Unifi Cloud Dashboard</a>
+      <a href="https://portal.azure.com" target="_blank">Azure Portal</a>
+      <a href="https://dev.azure.com/epichouse-azure" target="_blank">Azure DevOps</a>
+      <a href="https://github.com/epichouse" target="_blank">GitHub</a>
+      <a href="https://dashboard.uptimerobot.com/monitors" target="_blank">Uptime Robot</a>
+    </div>
+  </section>
+
+  </div>
+</body>
+</html>
