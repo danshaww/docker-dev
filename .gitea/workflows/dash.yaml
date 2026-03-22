@@ -1,0 +1,36 @@
+on:
+  push:
+    paths:
+      - images/dash/**
+  workflow_dispatch:
+
+env:
+  image_name: link-page
+  build_path: ./
+  registry: gitea.epichouse.co.uk
+  owner: dan
+
+jobs:
+  build:
+    runs-on: london
+    defaults:
+      run:
+        working-directory: ./images/${{ env.image_name }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
+  deploy:
+    runs-on: london
+    needs: build
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Pull latest image on ldnapptst1
+        run: ssh sa@ldnappprd1 "cd /var/lib/docker/compose/dash && sudo docker compose pull && docker compose down && docker compose up -d"
