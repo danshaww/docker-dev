@@ -111,7 +111,7 @@ sections:
         icon: nextcloud
       - name: SilverBullet
         url: https://silverbullet-test.epichouse.co.uk/
-        icon: silverbullet
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/silverbullet.png
       - name: NoteMark
         url: https://notemark-test.epichouse.co.uk/
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/note-mark.png
