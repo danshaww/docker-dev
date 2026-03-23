@@ -93,10 +93,10 @@ sections:
         icon: longhorn
       - name: Homepage
         url: https://homepage-test.epichouse.co.uk/
-        icon: homepage
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
       - name: Flame
         url: https://flame-test.epichouse.co.uk/
-        icon: flame
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/flame.png
       - name: Guacamole
         url: https://guacamole-test.epichouse.co.uk/guacamole/#/
         icon: guacamole
@@ -111,8 +111,8 @@ sections:
         icon: silverbullet
       - name: NoteMark
         url: https://notemark-test.epichouse.co.uk/
-        icon: note-mark
-      - name: MySQL Shared Instance (Adminer MGMT)
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/note-mark.png
+      - name: MySQL Shared Instance
         url: https://mysql-adminer-test.epichouse.co.uk/?server=shared&username=root
         icon: adminer
 
