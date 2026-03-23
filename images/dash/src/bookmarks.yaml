@@ -91,6 +91,30 @@ sections:
       - name: K8S Longhorn
         url: https://tlonghorn.epichouse.co.uk/
         icon: longhorn
+      - name: Homepage
+        url: https://homepage-test.epichouse.co.uk/
+        icon: homepage
+      - name: Flame
+        url: https://flame-test.epichouse.co.uk/
+        icon: flame
+      - name: Guacamole
+        url: https://guacamole-test.epichouse.co.uk/guacamole/#/
+        icon: guacamole
+      - name: Minio
+        url: https://minio-test.epichouse.co.uk/
+        icon: minio
+      - name: NextCloud
+        url: https://nextcloud-test.epichouse.co.uk/
+        icon: nextcloud
+      - name: SilverBullet
+        url: https://silverbullet-test.epichouse.co.uk/
+        icon: silverbullet
+      - name: NoteMark
+        url: https://notemark-test.epichouse.co.uk/
+        icon: note-mark
+      - name: MySQL Shared Instance (Adminer MGMT)
+        url: https://mysql-adminer-test.epichouse.co.uk/?server=shared&username=root
+        icon: adminer
 
   - title: Cloud Services
     theme: cyan
