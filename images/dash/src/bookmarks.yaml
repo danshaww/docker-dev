@@ -63,6 +63,9 @@ sections:
       - name: Code Snippets
         url: https://snippets.epichouse.co.uk/
         icon: https://snippets.epichouse.co.uk/logo.png
+      - name: Epichouse Site
+        url: https://epichouse.co.uk/
+        icon: ./logo.png
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
         icon: truecommand
