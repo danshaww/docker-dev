@@ -105,7 +105,7 @@ sections:
         icon: guacamole
       - name: Minio
         url: https://minio-test.epichouse.co.uk/
-        icon: minio
+        icon: https://images.seeklogo.com/logo-png/63/2/minio-icon-logo-png_seeklogo-637818.png
       - name: NextCloud
         url: https://nextcloud-test.epichouse.co.uk/
         icon: nextcloud
