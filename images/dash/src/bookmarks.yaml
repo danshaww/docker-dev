@@ -48,6 +48,9 @@ sections:
       - name: Gitea
         url: https://gitea.epichouse.co.uk/
         icon: gitea
+      - name: Gitea MySQL Instance
+        url: https://adminer-gitea.epichouse.co.uk/?server=db&username=root
+        icon: adminer
       - name: Jellyfin
         url: https://jellyfin.epichouse.co.uk/
         icon: jellyfin
