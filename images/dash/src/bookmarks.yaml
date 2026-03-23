@@ -133,7 +133,7 @@ sections:
         icon: azure-devops
       - name: GitHub
         url: https://github.com/epichouse
-        icon: github
+        icon: https://img.icons8.com/ios11/512/228BE6/github.png
       - name: Uptime Robot
         url: https://dashboard.uptimerobot.com/monitors
         icon: uptimerobot
