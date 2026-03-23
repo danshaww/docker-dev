@@ -66,6 +66,9 @@ sections:
       - name: Epichouse Site
         url: https://epichouse.co.uk/
         icon: https://dash.epichouse.co.uk/logo.png
+      - name: Homelab Dashboard
+        url: https://dash.epichouse.co.uk/
+        icon: https://dash.epichouse.co.uk/logo.png
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
         icon: truecommand
