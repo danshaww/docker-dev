@@ -75,6 +75,9 @@ sections:
       - name: Dockhand
         url: https://dockhand.epichouse.co.uk/nagios/
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dockhand.png
+      - name: Grafana
+        url: https://grafana.epichouse.co.uk
+        icon: grafana
 
   - title: Test Applications
     theme: purple
@@ -124,6 +127,9 @@ sections:
       - name: MySQL Shared Instance
         url: https://mysql-adminer-test.epichouse.co.uk/?server=shared&username=root
         icon: adminer
+      - name: Grafana
+        url: https://grafana-test.epichouse.co.uk
+        icon: grafana
 
   - title: Cloud Services
     theme: cyan
