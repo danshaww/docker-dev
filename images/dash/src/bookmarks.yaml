@@ -98,10 +98,10 @@ sections:
         url: https://vert-test.epichouse.co.uk/
         icon: https://img.alternativeto.net/icons/280/vert-sh_245605.png
       - name: K8S Dashboard
-        url: https://tdashboard.epichouse.co.uk/
+        url: https://dashboard.k8s.epichouse.co.uk/
         icon: kubernetes
       - name: K8S Longhorn
-        url: https://tlonghorn.epichouse.co.uk/
+        url: https://longhorn.k8s.epichouse.co.uk/
         icon: longhorn
       - name: Homepage
         url: https://homepage-test.epichouse.co.uk/
