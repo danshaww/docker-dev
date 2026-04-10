@@ -1,0 +1,27 @@
+name: Build Mesh Commander
+on:
+  workflow_dispatch:
+
+env:
+  image_name: meshcommander
+  build_path: images/meshcommander
+  registry: gitea.epichouse.co.uk
+  owner: dan
+
+jobs:
+  build:
+    runs-on: london
+    defaults:
+      run:
+        working-directory: ${{ env.build_path }}/
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
