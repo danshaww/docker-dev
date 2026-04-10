@@ -37,10 +37,10 @@ sections:
         icon: nagios
       - name: Mesh Commander (London)
         url: https://meshcommander.epichouse.co.uk
-        icon: meshcentral
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/meshcentral.png
       - name: Mesh Commander (Manchester)
         url: https://meshcommander-mcr.epichouse.co.uk
-        icon: meshcentral
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/meshcentral.png
 
   - title: Prod Applications
     theme: green
