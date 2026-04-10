@@ -35,6 +35,12 @@ sections:
       - name: Nagios (Manchester)
         url: https://mcrmonprd1.epichouse.co.uk/nagios/
         icon: nagios
+      - name: Mesh Commander (London)
+        url: https://meshcommander.epichouse.co.uk
+        icon: meshcentral
+      - name: Mesh Commander (Manchester)
+        url: https://meshcommander-mcr.epichouse.co.uk
+        icon: meshcentral
 
   - title: Prod Applications
     theme: green
