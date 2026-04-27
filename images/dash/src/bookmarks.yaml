@@ -43,13 +43,13 @@ sections:
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/meshcentral.png
       - name: DNS Primary (London)
         url: https://ldndnsprd1.epichouse.co.uk
-        icon: technitium
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/technitium.png
       - name: DNS Secondary (London)
         url: https://ldndnsprd2.epichouse.co.uk
-        icon: technitium
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/technitium.png
       - name: DNS Primary (Manchester)
         url: https://mcrdnsprd1.epichouse.co.uk
-        icon: technitium
+        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/technitium.png
 
   - title: Prod Applications
     theme: green
