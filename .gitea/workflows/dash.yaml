@@ -33,4 +33,4 @@ jobs:
         working-directory: ./
     steps:
       - name: Pull latest image on ldnapptst1
-        run: ssh sa@ldnappprd1 "cd /var/lib/docker/compose/dash && sudo docker compose pull && docker compose down && docker compose up -d"
+        run: ssh sa@ldnappprd1 "sudo docker compose -p dash pull && docker compose -p dash up -d"
