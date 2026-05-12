@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - images/dash/**
+      - images/dashy/**
   workflow_dispatch:
 
 env:

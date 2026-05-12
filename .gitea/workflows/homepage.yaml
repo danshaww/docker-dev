@@ -1,57 +1,69 @@
-name: Build Homepage Project
-
 on:
+  push:
+    paths:
+      - images/homepage/**
   workflow_dispatch:
-    inputs:
-      build_dev:
-        description: 'Build Development Image'
-        required: true
-        default: true
-        type: boolean
-      build_prod:
-        description: 'Build Production Image'
-        required: true
-        default: false
-        type: boolean
 
 env:
+  image_location: ./images/homepage
   image_name: homepage
-  build_path: images/homepage
   registry: gitea.epichouse.co.uk
   owner: dan
+  dev_server: ldnapptst1
+  dev_compose_project: homepage-test
+  dev_deploy: true
+  prod_server: ldnappprd1
+  prod_compose_project: homepage
+  prod_deploy: false
 
 jobs:
   build-dev:
     runs-on: london
-    if: ${{ github.event.inputs.build_dev == 'true' }}
     defaults:
       run:
-        working-directory: ${{ env.build_path }}/
+        working-directory: ${{ env.image_location }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Authenticate with Gitea
         run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
       - name: Build Docker Image
-        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development .
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
+  deploy-dev:
+    runs-on: london
+    if: ${{ env.dev_deploy == 'true' }}
+    needs: build-dev
+    steps:
+      - name: Pull Image (DEV)
+        run: |
+          ssh sa@${{ env.dev_server }} \
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml up -d"
+
   build-prod:
     runs-on: london
-    if: ${{ github.event.inputs.build_prod == 'true' }}
     defaults:
       run:
-        working-directory: ${{ env.build_path }}/
+        working-directory: ${{ env.image_location }}
+    needs: deploy-dev
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Authenticate with Gitea
         run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
       - name: Build Docker Image
-        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest .
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
+  deploy-prod:
+    runs-on: london
+    if: ${{ env.prod_deploy == 'true' }}
+    needs: build-prod
+    steps:
+      - name: Pull Image (PROD)
+        run: |
+          ssh sa@${{ env.prod_server }} \
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml up -d"
