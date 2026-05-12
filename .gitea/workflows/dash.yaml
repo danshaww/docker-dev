@@ -11,9 +11,10 @@ env:
   owner: dan
   dev_server: ldnapptst1
   dev_compose_project: dash-test
+  dev_deploy: true
   prod_server: ldnappprd1
   prod_compose_project: dash
-  deploy_image: true
+  prod_deploy: true
 
 jobs:
   build-dev:
@@ -32,7 +33,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
   deploy-dev:
     runs-on: london
-    if: ${{ env.deploy_image == 'true' }}
+    if: ${{ env.dev_deploy == 'true' }}
     needs: build-dev
     steps:
       - name: Pull Image (DEV)
@@ -58,7 +59,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
   deploy-prod:
     runs-on: london
-    if: ${{ env.deploy_image == 'true' }}
+    if: ${{ env.prod_deploy == 'true' }}
     needs: build-prod
     steps:
       - name: Pull Image (PROD)
