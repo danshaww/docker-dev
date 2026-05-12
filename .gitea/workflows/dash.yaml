@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 
 env:
+  image_location: ./images/dash
   image_name: dash
   registry: gitea.epichouse.co.uk
   owner: dan
@@ -19,7 +20,7 @@ jobs:
     runs-on: london
     defaults:
       run:
-        working-directory: ./images/${{ env.image_name }}
+        working-directory: ${{ env.image_location }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -44,7 +45,7 @@ jobs:
     runs-on: london
     defaults:
       run:
-        working-directory: ./images/${{ env.image_name }}
+        working-directory: ${{ env.image_location }}
     needs: deploy-dev
     steps:
       - name: Check out repository code
