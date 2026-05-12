@@ -35,7 +35,7 @@ jobs:
     if: ${{ env.deploy_image == 'true' }}
     needs: build-dev
     steps:
-      - name: Pull latest image on ${{ env.dev_server }}
+      - name: Pull Image (DEV)
         run: |
           ssh sa@${{ env.dev_server }} \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml pull \
@@ -61,7 +61,7 @@ jobs:
     if: ${{ env.deploy_image == 'true' }}
     needs: build-prod
     steps:
-      - name: Pull latest image on ${{ env.prod_server }}
+      - name: Pull Image (PROD)
         run: |
           ssh sa@${{ env.prod_server }} \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml pull \
