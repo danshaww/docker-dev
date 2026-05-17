@@ -137,7 +137,7 @@ sections:
         url: https://grafana-test.epichouse.co.uk
         icon: grafana
       - name: Rustfs
-        url: https://rustfs-test.epichouse.co.uk
+        url: https://rustfs-test-ui.epichouse.co.uk
         icon: rustfs
 
   - title: Cloud Services
