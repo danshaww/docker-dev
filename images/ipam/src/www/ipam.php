@@ -218,7 +218,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   [data-theme="light"] { --bg:#f4f6f9;--bg2:#ffffff;--bg3:#f0f2f5;--sidebar:#1a1d2e;--sidebar2:#2a2f4a;--sidebar3:#2d3150;--stext:#ccd;--stext2:#778;--border:#e8eaf0;--border2:#dde;--text:#222;--text2:#444;--text3:#666;--text4:#888;--text5:#bbb;--input-bg:#ffffff;--shadow:0 1px 4px rgba(0,0,0,.08);--modal-shadow:0 8px 40px rgba(0,0,0,.18);--accent:#2563eb;--accent2:#1d4ed8;--green:#2ecc71;--red-bg:#fef2f2;--red-bdr:#fca5a5;--red-text:#b91c1c;--hover-row:#f5f7ff;--free-text:#bcc0cc;--overlay:rgba(0,0,0,.35); }
   [data-theme="dark"]  { --bg:#0d0f14;--bg2:#13161e;--bg3:#1c202c;--sidebar:#0a0c12;--sidebar2:#161926;--sidebar3:#1e2235;--stext:#aab;--stext2:#556;--border:#272b38;--border2:#2e3347;--text:#e8eaf2;--text2:#c0c4d8;--text3:#8b90a8;--text4:#666a80;--text5:#3a3e52;--input-bg:#1c202c;--shadow:0 1px 4px rgba(0,0,0,.4);--modal-shadow:0 8px 40px rgba(0,0,0,.6);--accent:#4f8ef7;--accent2:#3a6fd4;--green:#3ecf8e;--red-bg:#2a1010;--red-bdr:#7f2020;--red-text:#f87171;--hover-row:#1a1e2a;--free-text:#383c50;--overlay:rgba(0,0,0,.6); }
 
-  body { font-family: system-ui, sans-serif; font-size: 15px; background: var(--bg); color: var(--text); }
+  body { font-family: system-ui, sans-serif; font-size: 16px; background: var(--bg); color: var(--text); }
 
   /* ── Layout ── */
   html, body { height: 100%; overflow: hidden; }
@@ -504,7 +504,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div class="modal-footer">
       <button class="btn btn-grey" onclick="closeModal('ipModal')">Cancel</button>
-      <button class="btn btn-blue" id="ipModalSubmit" onclick="document.getElementById('ipForm').submit()">Add IP</button>
+      <button class="btn btn-blue" id="ipModalSubmit" onclick="submitForm('ipForm')">Add IP</button>
     </div>
   </div>
 </div>
@@ -539,7 +539,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div class="modal-footer">
       <button class="btn btn-grey" onclick="closeModal('dhcpModal')">Cancel</button>
-      <button class="btn btn-blue" onclick="document.getElementById('dhcpForm').submit()">Assign Scope</button>
+      <button class="btn btn-blue" onclick="submitForm('dhcpForm')">Assign Scope</button>
     </div>
   </div>
 </div>
@@ -582,7 +582,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div class="modal-footer">
       <button class="btn btn-grey" onclick="closeModal('subnetModal')">Cancel</button>
-      <button class="btn btn-blue" onclick="document.getElementById('subnetForm').submit()">Add Subnet</button>
+      <button class="btn btn-blue" onclick="submitForm('subnetForm')">Add Subnet</button>
     </div>
   </div>
 </div>
@@ -687,24 +687,27 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   }
 
   // ── Scroll preservation ───────────────────────────────────────────────────
-  const mainEl = document.querySelector('.main');
+  const mainEl    = document.querySelector('.main');
   const SCROLL_KEY = 'ipam-scroll-<?= $subnet ? safe($subnet['id']) : 'overview' ?>';
 
+  // Restore immediately so there's no visible jump
   const savedScroll = sessionStorage.getItem(SCROLL_KEY);
   if (savedScroll !== null) {
     mainEl.scrollTop = parseInt(savedScroll, 10);
     sessionStorage.removeItem(SCROLL_KEY);
   }
 
-  function saveScroll() {
+  // Wrap submit so scroll is always saved, even when called programmatically
+  function submitForm(id) {
     sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
+    document.getElementById(id).submit();
   }
 
-  document.querySelectorAll('form').forEach(f => f.addEventListener('submit', saveScroll));
-  ['ipForm','dhcpForm'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('submit', saveScroll);
+  // Catch regular form submits (delete buttons etc.)
+  document.querySelectorAll('form').forEach(f => {
+    f.addEventListener('submit', () => sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop));
   });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && activeModal) {
       e.preventDefault();
@@ -717,9 +720,9 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
       const tag = e.target.tagName;
       if (tag === 'INPUT' || tag === 'SELECT') {
         e.preventDefault();
-        if (activeModal === 'ipModal')     document.getElementById('ipForm').submit();
-        if (activeModal === 'dhcpModal')   document.getElementById('dhcpForm').submit();
-        if (activeModal === 'subnetModal') document.getElementById('subnetForm').submit();
+        if (activeModal === 'ipModal')     submitForm('ipForm');
+        if (activeModal === 'dhcpModal')   submitForm('dhcpForm');
+        if (activeModal === 'subnetModal') submitForm('subnetForm');
       }
       return;
     }
