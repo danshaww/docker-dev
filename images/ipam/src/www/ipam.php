@@ -37,12 +37,11 @@ function write_ips($id, $rows) {
     write_csv(ips_file($id), ['id','ip','hostname','status','note','updated'], $rows);
 }
 
-function valid_ip($ip)  { return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4); }
+function valid_ip($ip) { return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4); }
 function ip_in_net($ip, $net, $pfx) {
     $mask = ~((1 << (32 - (int)$pfx)) - 1);
     return (ip2long($ip) & $mask) === (ip2long($net) & $mask);
 }
-
 function all_ips_in_subnet($network, $prefix) {
     $prefix = (int)$prefix;
     $total  = 1 << (32 - $prefix);
@@ -53,25 +52,14 @@ function all_ips_in_subnet($network, $prefix) {
     for ($i = $start; $i <= $end; $i++) $ips[] = long2ip($base + $i);
     return $ips;
 }
-
-// Returns the next IP after the highest allocated one, or the first free if none allocated
 function next_available_ip($network, $prefix, $allocated_ips) {
-    $all = all_ips_in_subnet($network, $prefix);
+    $all  = all_ips_in_subnet($network, $prefix);
     if (empty($all)) return '';
     if (empty($allocated_ips)) return $all[0];
-    // find the highest allocated IP
-    $max = 0;
-    foreach ($allocated_ips as $r) {
-        $n = ip2long($r['ip']);
-        if ($n > $max) $max = $n;
-    }
-    $next = long2ip($max + 1);
-    // check it's still within the subnet and not already used
+    $max  = 0;
+    foreach ($allocated_ips as $r) { $n = ip2long($r['ip']); if ($n > $max) $max = $n; }
     $used = array_column($allocated_ips, 'ip');
-    foreach ($all as $ip) {
-        if (ip2long($ip) > $max && !in_array($ip, $used)) return $ip;
-    }
-    // subnet full — return empty
+    foreach ($all as $ip) { if (ip2long($ip) > $max && !in_array($ip, $used)) return $ip; }
     return '';
 }
 
@@ -103,8 +91,8 @@ if ($action === 'delete_subnet') {
 }
 
 if ($action === 'add_ip') {
-    $sid    = $_POST['subnet_id'] ?? '';
-    $ip     = trim($_POST['ip'] ?? '');
+    $sid = $_POST['subnet_id'] ?? '';
+    $ip  = trim($_POST['ip'] ?? '');
     $subnets = read_subnets();
     $subnet  = current(array_filter($subnets, fn($s) => $s['id'] === $sid));
     if (!$subnet)           $error = 'Subnet not found.';
@@ -113,8 +101,7 @@ if ($action === 'add_ip') {
                             $error = "IP is not within {$subnet['network']}/{$subnet['prefix']}.";
     else {
         $ips = read_ips($sid);
-        if (array_filter($ips, fn($r) => $r['ip'] === $ip))
-            $error = 'IP already allocated.';
+        if (array_filter($ips, fn($r) => $r['ip'] === $ip)) $error = 'IP already allocated.';
         else {
             $ips[] = ['id'=>uid(),'ip'=>$ip,'hostname'=>trim($_POST['hostname']??''),
                       'status'=>$_POST['status']??'active',
@@ -122,6 +109,37 @@ if ($action === 'add_ip') {
             write_ips($sid, $ips);
             header("Location: ipam.php?subnet=$sid"); exit;
         }
+    }
+    $active_subnet = $sid;
+}
+
+if ($action === 'add_dhcp_scope') {
+    $sid   = $_POST['subnet_id'] ?? '';
+    $start = trim($_POST['dhcp_start'] ?? '');
+    $end   = trim($_POST['dhcp_end']   ?? '');
+    $note  = trim($_POST['dhcp_note']  ?? 'DHCP');
+    $subnets = read_subnets();
+    $subnet  = current(array_filter($subnets, fn($s) => $s['id'] === $sid));
+    if (!$subnet)                $error = 'Subnet not found.';
+    elseif (!valid_ip($start))   $error = 'Invalid start IP.';
+    elseif (!valid_ip($end))     $error = 'Invalid end IP.';
+    elseif (ip2long($start) > ip2long($end)) $error = 'Start IP must be before end IP.';
+    elseif (!ip_in_net($start, $subnet['network'], $subnet['prefix'])) $error = 'Start IP not in subnet.';
+    elseif (!ip_in_net($end,   $subnet['network'], $subnet['prefix'])) $error = 'End IP not in subnet.';
+    else {
+        $ips      = read_ips($sid);
+        $used_map = array_column($ips, 'ip');
+        $added    = 0;
+        for ($n = ip2long($start); $n <= ip2long($end); $n++) {
+            $ip = long2ip($n);
+            if (!in_array($ip, $used_map)) {
+                $ips[] = ['id'=>uid(),'ip'=>$ip,'hostname'=>'',
+                          'status'=>'dhcp','note'=>$note,'updated'=>now_ts()];
+                $added++;
+            }
+        }
+        write_ips($sid, $ips);
+        header("Location: ipam.php?subnet=$sid"); exit;
     }
     $active_subnet = $sid;
 }
@@ -150,10 +168,10 @@ if ($action === 'edit_ip') {
 }
 
 // ─── Load data for display ────────────────────────────────────────────────────
-$subnets      = read_subnets();
-$subnet       = $active_subnet ? current(array_filter($subnets, fn($s) => $s['id'] === $active_subnet)) : null;
-$ips          = $subnet ? read_ips($subnet['id']) : [];
-$next_ip      = $subnet ? next_available_ip($subnet['network'], $subnet['prefix'], $ips) : '';
+$subnets       = read_subnets();
+$subnet        = $active_subnet ? current(array_filter($subnets, fn($s) => $s['id'] === $active_subnet)) : null;
+$ips           = $subnet ? read_ips($subnet['id']) : [];
+$next_ip       = $subnet ? next_available_ip($subnet['network'], $subnet['prefix'], $ips) : '';
 $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','inactive'=>'#888'];
 ?>
 <!DOCTYPE html>
@@ -197,43 +215,42 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     --free-text:#383c50;
     --overlay:rgba(0,0,0,.6);
   }}
-  [data-theme="light"] {
-    --bg:#f4f6f9;--bg2:#ffffff;--bg3:#f0f2f5;--sidebar:#1a1d2e;--sidebar2:#2a2f4a;--sidebar3:#2d3150;--stext:#ccd;--stext2:#778;--border:#e8eaf0;--border2:#dde;--text:#222;--text2:#444;--text3:#666;--text4:#888;--text5:#bbb;--input-bg:#ffffff;--shadow:0 1px 4px rgba(0,0,0,.08);--modal-shadow:0 8px 40px rgba(0,0,0,.18);--accent:#2563eb;--accent2:#1d4ed8;--green:#2ecc71;--red-bg:#fef2f2;--red-bdr:#fca5a5;--red-text:#b91c1c;--hover-row:#f5f7ff;--free-text:#bcc0cc;--overlay:rgba(0,0,0,.35);
-  }
-  [data-theme="dark"] {
-    --bg:#0d0f14;--bg2:#13161e;--bg3:#1c202c;--sidebar:#0a0c12;--sidebar2:#161926;--sidebar3:#1e2235;--stext:#aab;--stext2:#556;--border:#272b38;--border2:#2e3347;--text:#e8eaf2;--text2:#c0c4d8;--text3:#8b90a8;--text4:#666a80;--text5:#3a3e52;--input-bg:#1c202c;--shadow:0 1px 4px rgba(0,0,0,.4);--modal-shadow:0 8px 40px rgba(0,0,0,.6);--accent:#4f8ef7;--accent2:#3a6fd4;--green:#3ecf8e;--red-bg:#2a1010;--red-bdr:#7f2020;--red-text:#f87171;--hover-row:#1a1e2a;--free-text:#383c50;--overlay:rgba(0,0,0,.6);
-  }
+  [data-theme="light"] { --bg:#f4f6f9;--bg2:#ffffff;--bg3:#f0f2f5;--sidebar:#1a1d2e;--sidebar2:#2a2f4a;--sidebar3:#2d3150;--stext:#ccd;--stext2:#778;--border:#e8eaf0;--border2:#dde;--text:#222;--text2:#444;--text3:#666;--text4:#888;--text5:#bbb;--input-bg:#ffffff;--shadow:0 1px 4px rgba(0,0,0,.08);--modal-shadow:0 8px 40px rgba(0,0,0,.18);--accent:#2563eb;--accent2:#1d4ed8;--green:#2ecc71;--red-bg:#fef2f2;--red-bdr:#fca5a5;--red-text:#b91c1c;--hover-row:#f5f7ff;--free-text:#bcc0cc;--overlay:rgba(0,0,0,.35); }
+  [data-theme="dark"]  { --bg:#0d0f14;--bg2:#13161e;--bg3:#1c202c;--sidebar:#0a0c12;--sidebar2:#161926;--sidebar3:#1e2235;--stext:#aab;--stext2:#556;--border:#272b38;--border2:#2e3347;--text:#e8eaf2;--text2:#c0c4d8;--text3:#8b90a8;--text4:#666a80;--text5:#3a3e52;--input-bg:#1c202c;--shadow:0 1px 4px rgba(0,0,0,.4);--modal-shadow:0 8px 40px rgba(0,0,0,.6);--accent:#4f8ef7;--accent2:#3a6fd4;--green:#3ecf8e;--red-bg:#2a1010;--red-bdr:#7f2020;--red-text:#f87171;--hover-row:#1a1e2a;--free-text:#383c50;--overlay:rgba(0,0,0,.6); }
 
   body { font-family: system-ui, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); min-height: 100vh; }
 
+  /* ── Layout ── */
   .layout  { display: flex; min-height: 100vh; }
   .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; }
-  .sidebar-top { padding: 16px 16px 12px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .sidebar-top h1 { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
-  .sidebar-top h1 small { display: block; font-size: .7rem; font-weight: 400; color: var(--stext2); margin-top: 2px; }
+  .sidebar-top { padding: 14px 12px 10px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .sidebar-top h1 { font-size: .95rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
+  .sidebar-top h1 small { display: block; font-size: .68rem; font-weight: 400; color: var(--stext2); margin-top: 1px; }
+  .sidebar-actions { padding: 8px; border-bottom: 1px solid var(--sidebar3); }
   .sidebar nav { flex: 1; padding: 8px; overflow-y: auto; }
   .sidebar a { display: block; padding: 7px 10px; border-radius: 5px; color: var(--stext); text-decoration: none; font-size: .82rem; margin-bottom: 2px; transition: background .15s; }
   .sidebar a:hover { background: var(--sidebar2); color: #fff; }
   .sidebar a.active { background: var(--accent); color: #fff; }
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
   .sidebar a .meta { font-size: .7rem; opacity: .7; }
-  .sidebar-footer { padding: 12px; border-top: 1px solid var(--sidebar3); display: flex; flex-direction: column; gap: 6px; }
   .main { flex: 1; padding: 24px; overflow-y: auto; }
 
-  .theme-btn  { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: .78rem; white-space: nowrap; flex-shrink: 0; }
+  /* ── Sidebar buttons ── */
+  .theme-btn { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: .75rem; white-space: nowrap; flex-shrink: 0; }
   .theme-btn:hover { background: var(--sidebar3); color: #fff; }
-  .add-subnet-btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px; border-radius: 5px; background: var(--sidebar2); border: 1px dashed var(--sidebar3); color: var(--stext); font-size: .8rem; font-weight: 600; cursor: pointer; transition: background .15s; width: 100%; font-family: inherit; }
+  .add-subnet-btn { display: flex; align-items: center; justify-content: center; gap: 5px; padding: 7px; border-radius: 5px; background: var(--sidebar2); border: 1px dashed var(--sidebar3); color: var(--stext); font-size: .78rem; font-weight: 600; cursor: pointer; transition: background .15s; width: 100%; font-family: inherit; }
   .add-subnet-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+  /* ── Stats ── */
+  .stats { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stat  { flex: 1; background: var(--bg2); border-radius: 6px; box-shadow: var(--shadow); padding: 8px 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .stat .val { font-size: 1.1rem; font-weight: 800; font-family: monospace; }
+  .stat .lbl { font-size: .65rem; color: var(--text4); text-transform: uppercase; letter-spacing: .04em; line-height: 1.2; }
+
+  /* ── Table ── */
   .card { background: var(--bg2); border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border); overflow: hidden; }
-
-  .stats { display: flex; gap: 12px; margin-bottom: 20px; }
-  .stat  { flex: 1; background: var(--bg2); border-radius: 8px; box-shadow: var(--shadow); padding: 12px 16px; border: 1px solid var(--border); }
-  .stat .val { font-size: 1.5rem; font-weight: 800; font-family: monospace; }
-  .stat .lbl { font-size: .68rem; color: var(--text4); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
-
   table { width: 100%; border-collapse: collapse; font-size: .8rem; }
-  th { text-align: left; padding: 6px 10px; background: var(--bg3); font-size: .67rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); border-bottom: 2px solid var(--border); }
+  th { text-align: left; padding: 6px 10px; background: var(--bg3); font-size: .67rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); border-bottom: 2px solid var(--border); white-space: nowrap; }
   td { padding: 5px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr.allocated td { color: var(--text2); }
@@ -246,13 +263,14 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .dot { display: inline-flex; align-items: center; gap: 4px; font-size: .76rem; font-weight: 600; }
   .dot::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
+  /* ── Buttons ── */
   .btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 11px; border-radius: 5px; border: none; font-size: .75rem; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background .15s; }
-  .btn-blue { background: var(--accent); color: #fff; }
-  .btn-blue:hover { background: var(--accent2); }
-  .btn-red  { background: transparent; color: var(--red-text); border: 1px solid transparent; }
-  .btn-red:hover  { background: var(--red-bg); border-color: var(--red-bdr); }
-  .btn-grey { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
-  .btn-grey:hover { filter: brightness(.95); }
+  .btn-blue  { background: var(--accent); color: #fff; }
+  .btn-blue:hover  { background: var(--accent2); }
+  .btn-red   { background: transparent; color: var(--red-text); border: 1px solid transparent; }
+  .btn-red:hover   { background: var(--red-bg); border-color: var(--red-bdr); }
+  .btn-grey  { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+  .btn-grey:hover  { filter: brightness(.95); }
   .btn-ghost { background: transparent; color: var(--accent); border: none; padding: 3px 6px; font-size: .73rem; font-weight: 600; cursor: pointer; font-family: inherit; border-radius: 4px; }
   .btn-ghost:hover { background: var(--bg3); }
 
@@ -261,30 +279,32 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .bar-wrap { background: var(--bg3); border-radius: 3px; height: 5px; overflow: hidden; width: 70px; display: inline-block; vertical-align: middle; }
   .bar-fill  { height: 100%; border-radius: 3px; }
 
+  /* ── Overview grid ── */
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
   .grid-card { background: var(--bg2); border: 2px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); padding: 14px; transition: border-color .15s; text-decoration: none; color: inherit; display: block; }
   .grid-card:hover { border-color: var(--accent); }
   .grid-card .cidr { font-family: monospace; font-weight: 700; font-size: .95rem; color: var(--accent); }
   .grid-card .name { font-size: .8rem; color: var(--text3); margin: 3px 0 10px; }
 
-  .page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  /* ── Page header ── */
+  .page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
   .page-hdr h2 { font-size: 1.05rem; font-weight: 700; }
-  .page-hdr .sub { font-family: monospace; font-size: .8rem; color: var(--text3); margin-top: 2px; }
-
+  .page-hdr .sub { font-family: monospace; font-size: .78rem; color: var(--text3); margin-top: 2px; }
   kbd { display: inline-block; padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border2); background: var(--bg3); font-size: .7rem; font-family: monospace; color: var(--text3); }
 
-  /* ── Shared modal styles ── */
+  /* ── Modals ── */
   .modal-overlay { display: none; position: fixed; inset: 0; background: var(--overlay); backdrop-filter: blur(3px); z-index: 100; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
   .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--modal-shadow); width: 440px; max-width: calc(100vw - 32px); max-height: calc(100vh - 48px); overflow-y: auto; animation: modal-in .15s ease; }
   @keyframes modal-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
-  .modal-hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
+  .modal-hdr    { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
   .modal-hdr h3 { font-size: .9rem; font-weight: 700; }
-  .modal-close { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 1.1rem; padding: 2px 6px; border-radius: 4px; line-height: 1; }
+  .modal-close  { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 1.1rem; padding: 2px 6px; border-radius: 4px; line-height: 1; }
   .modal-close:hover { background: var(--bg3); color: var(--text); }
   .modal-body   { padding: 16px; }
   .modal-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
 
+  /* ── Form fields ── */
   .field { margin-bottom: 12px; }
   .field:last-child { margin-bottom: 0; }
   .field label { display: block; font-size: .68rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
@@ -293,6 +313,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .field input[readonly] { opacity: .55; cursor: default; }
   .field select option { background: var(--bg2); color: var(--text); }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-hint { font-size: .7rem; color: var(--text4); margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -304,6 +325,9 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     <h1>IPAM <small>IP Address Manager</small></h1>
     <button class="theme-btn" onclick="cycleTheme()" id="themeBtn">⚙</button>
   </div>
+  <div class="sidebar-actions">
+    <button class="add-subnet-btn" onclick="openSubnetModal()">+ Add Subnet</button>
+  </div>
   <nav>
     <a href="ipam.php" <?= !$subnet ? 'class="active"' : '' ?>>🌐 Overview</a>
     <?php foreach ($subnets as $s): ?>
@@ -313,9 +337,6 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
       </a>
     <?php endforeach; ?>
   </nav>
-  <div class="sidebar-footer">
-    <button class="add-subnet-btn" onclick="openSubnetModal()">+ Add Subnet</button>
-  </div>
 </aside>
 
 <!-- ── Main ── -->
@@ -335,8 +356,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     <?php foreach ($subnets as $s):
         $sips = read_ips($s['id']);
         $all  = all_ips_in_subnet($s['network'], $s['prefix']);
-        $u    = count($all);
-        $used = count($sips);
+        $u    = count($all); $used = count($sips);
         $pct  = $u > 0 ? round($used / $u * 100) : 0;
         $col  = $pct >= 90 ? '#e74c3c' : ($pct >= 70 ? '#f39c12' : '#2ecc71');
     ?>
@@ -354,12 +374,11 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     $all_ips  = all_ips_in_subnet($subnet['network'], $subnet['prefix']);
     $used_map = [];
     foreach ($ips as $r) $used_map[$r['ip']] = $r;
-    $total = count($all_ips);
-    $used  = count($ips);
-    $free  = $total - $used;
+    $total = count($all_ips); $used = count($ips); $free = $total - $used;
     $pct   = $total > 0 ? round($used / $total * 100) : 0;
     $col   = $pct >= 90 ? '#e74c3c' : ($pct >= 70 ? '#f39c12' : '#2ecc71');
   ?>
+
   <div class="page-hdr">
     <div>
       <h2><?= safe($subnet['name']) ?></h2>
@@ -370,20 +389,33 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <span style="font-size:.75rem;color:var(--text4)">Press <kbd>N</kbd> to add</span>
+      <button class="btn btn-grey" onclick="openDhcpModal()">⚡ DHCP Scope</button>
       <button class="btn btn-blue" onclick="openAddIp()">+ Add IP</button>
       <form method="post" onsubmit="return confirm('Delete this subnet and all its IPs?')" style="margin:0">
         <input type="hidden" name="action" value="delete_subnet">
         <input type="hidden" name="id"     value="<?= $subnet['id'] ?>">
-        <button class="btn btn-red">🗑 Delete subnet</button>
+        <button class="btn btn-red">🗑 Delete</button>
       </form>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat"><div class="val" style="color:var(--accent)"><?= $used ?></div><div class="lbl">Allocated</div></div>
-    <div class="stat"><div class="val" style="color:var(--green)"><?= $free ?></div><div class="lbl">Available</div></div>
-    <div class="stat"><div class="val"><?= $total ?></div><div class="lbl">Total IPs</div></div>
-    <div class="stat"><div class="val" style="color:<?= $col ?>"><?= $pct ?>%</div><div class="lbl">Utilisation</div></div>
+    <div class="stat">
+      <div class="val" style="color:var(--accent)"><?= $used ?></div>
+      <div class="lbl">Allocated</div>
+    </div>
+    <div class="stat">
+      <div class="val" style="color:var(--green)"><?= $free ?></div>
+      <div class="lbl">Available</div>
+    </div>
+    <div class="stat">
+      <div class="val"><?= $total ?></div>
+      <div class="lbl">Total IPs</div>
+    </div>
+    <div class="stat">
+      <div class="val" style="color:<?= $col ?>"><?= $pct ?>%</div>
+      <div class="lbl">Utilisation</div>
+    </div>
   </div>
 
   <div class="card">
@@ -430,7 +462,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
 </div>
 
 <!-- ── IP Modal ── -->
-<div class="modal-overlay" id="ipModal" onclick="if(event.target===this)closeModal('ipModal')">
+<div class="modal-overlay" id="ipModal">
   <div class="modal">
     <div class="modal-hdr">
       <h3 id="ipModalTitle">Add IP Address</h3>
@@ -468,13 +500,48 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div class="modal-footer">
       <button class="btn btn-grey" onclick="closeModal('ipModal')">Cancel</button>
-      <button class="btn btn-blue" onclick="document.getElementById('ipForm').submit()" id="ipModalSubmit">Add IP</button>
+      <button class="btn btn-blue" id="ipModalSubmit" onclick="document.getElementById('ipForm').submit()">Add IP</button>
     </div>
   </div>
 </div>
 
-<!-- ── Subnet Modal ── -->
-<div class="modal-overlay" id="subnetModal" onclick="if(event.target===this)closeModal('subnetModal')">
+<!-- ── DHCP Scope Modal ── -->
+<div class="modal-overlay" id="dhcpModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Assign DHCP Scope</h3>
+      <button class="modal-close" onclick="closeModal('dhcpModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="ipam.php?subnet=<?= $subnet ? safe($subnet['id']) : '' ?>" id="dhcpForm">
+        <input type="hidden" name="action"    value="add_dhcp_scope">
+        <input type="hidden" name="subnet_id" value="<?= $subnet ? safe($subnet['id']) : '' ?>">
+        <div class="field-row">
+          <div class="field">
+            <label>Start IP *</label>
+            <input type="text" name="dhcp_start" id="dhcp_start" placeholder="<?= $subnet ? safe($subnet['network']) : '192.168.1.100' ?>" required>
+          </div>
+          <div class="field">
+            <label>End IP *</label>
+            <input type="text" name="dhcp_end" id="dhcp_end" placeholder="<?= $subnet ? safe($subnet['network']) : '192.168.1.200' ?>" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>Note</label>
+          <input type="text" name="dhcp_note" id="dhcp_note" value="DHCP" placeholder="DHCP scope label">
+          <div class="field-hint">All IPs in the range will be marked as DHCP with this note. Already-allocated IPs are skipped.</div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-grey" onclick="closeModal('dhcpModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="document.getElementById('dhcpForm').submit()">Assign Scope</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Add Subnet Modal ── -->
+<div class="modal-overlay" id="subnetModal">
   <div class="modal">
     <div class="modal-hdr">
       <h3>Add Subnet</h3>
@@ -523,7 +590,6 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   const MODES = ['system','light','dark'];
   const ICONS = { system:'⚙ Auto', light:'☀️ Light', dark:'🌙 Dark' };
   let mode    = localStorage.getItem('ipam-theme') || 'system';
-
   function applyTheme() {
     if (mode === 'system') html.removeAttribute('data-theme');
     else html.dataset.theme = mode;
@@ -536,24 +602,49 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   }
   applyTheme();
 
-  // ── Next available IP (passed from PHP) ───────────────────────────────────
-  const NEXT_IP = <?= json_encode($next_ip) ?>;
+  // ── Modal helpers ──────────────────────────────────────────────────────────
+  let activeModal = null;
 
-  // ── Generic modal open/close ──────────────────────────────────────────────
-  function openModal(id)  { document.getElementById(id).classList.add('open'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  function openModal(id) {
+    if (activeModal) closeModal(activeModal);
+    activeModal = id;
+    document.getElementById(id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    if (activeModal === id) activeModal = null;
+  }
 
+  // Close on backdrop click
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('mousedown', e => {
+      if (e.target === overlay) closeModal(overlay.id);
+    });
+  });
+
+  // ── Subnet modal ───────────────────────────────────────────────────────────
   function openSubnetModal() {
     document.getElementById('sn_name').value    = '';
     document.getElementById('sn_network').value = '';
     document.getElementById('sn_prefix').value  = '';
     document.getElementById('sn_gateway').value = '';
-    document.getElementById('sn_vlan').value     = '';
+    document.getElementById('sn_vlan').value    = '';
     openModal('subnetModal');
     setTimeout(() => document.getElementById('sn_name').focus(), 50);
   }
 
-  // ── IP modal ──────────────────────────────────────────────────────────────
+  // ── DHCP scope modal ───────────────────────────────────────────────────────
+  function openDhcpModal() {
+    document.getElementById('dhcp_start').value = '';
+    document.getElementById('dhcp_end').value   = '';
+    document.getElementById('dhcp_note').value  = 'DHCP';
+    openModal('dhcpModal');
+    setTimeout(() => document.getElementById('dhcp_start').focus(), 50);
+  }
+
+  // ── IP modal ───────────────────────────────────────────────────────────────
+  const NEXT_IP = <?= json_encode($next_ip) ?>;
+
   function openAddIp() {
     document.getElementById('ipModalTitle').textContent  = 'Add IP Address';
     document.getElementById('ipModalSubmit').textContent = 'Add IP';
@@ -565,10 +656,8 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     document.getElementById('f_status').value            = 'active';
     document.getElementById('f_note').value              = '';
     openModal('ipModal');
-    // focus hostname if IP is prefilled, otherwise focus IP
     setTimeout(() => {
-      const target = NEXT_IP ? document.getElementById('f_hostname') : document.getElementById('f_ip');
-      target.focus();
+      (NEXT_IP ? document.getElementById('f_hostname') : document.getElementById('f_ip')).focus();
     }, 50);
   }
 
@@ -593,17 +682,32 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     setTimeout(() => document.getElementById('f_hostname').focus(), 50);
   }
 
-  // ── Keyboard shortcuts ────────────────────────────────────────────────────
+  // ── Keyboard: Escape closes, Enter submits active modal ───────────────────
   document.addEventListener('keydown', e => {
-    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
-
-    if (e.key === 'Escape') {
-      closeModal('ipModal');
-      closeModal('subnetModal');
+    if (e.key === 'Escape' && activeModal) {
+      e.preventDefault();
+      closeModal(activeModal);
+      return;
     }
-    <?php if ($subnet): ?>
-    if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openAddIp(); }
-    <?php endif; ?>
+
+    // Enter inside a modal input/select submits that modal's form
+    if (e.key === 'Enter' && activeModal) {
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'SELECT') {
+        e.preventDefault();
+        if (activeModal === 'ipModal')     document.getElementById('ipForm').submit();
+        if (activeModal === 'dhcpModal')   document.getElementById('dhcpForm').submit();
+        if (activeModal === 'subnetModal') document.getElementById('subnetForm').submit();
+      }
+      return;
+    }
+
+    // Global shortcut — only when not focused in an input and no modal open
+    if (!activeModal && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) {
+      <?php if ($subnet): ?>
+      if (e.key === 'n' || e.key === 'N') { e.preventDefault(); openAddIp(); }
+      <?php endif; ?>
+    }
   });
 </script>
 </body>
