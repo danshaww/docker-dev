@@ -234,7 +234,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
   .sidebar a .meta { font-size: .7rem; opacity: .7; }
   .main { flex: 1; padding: 24px; overflow-y: auto; }
-  .main-inner { max-width: 1100px; margin: 0 auto; }
+  .main-inner { max-width: 1400px; margin: 0 auto; }
 
   /* ── Sidebar buttons ── */
   .theme-btn { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: .75rem; white-space: nowrap; flex-shrink: 0; }
@@ -685,7 +685,30 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     setTimeout(() => document.getElementById('f_hostname').focus(), 50);
   }
 
-  // ── Keyboard: Escape closes, Enter submits active modal ───────────────────
+  // ── Scroll preservation ───────────────────────────────────────────────────
+  const mainEl = document.querySelector('.main');
+  const SCROLL_KEY = 'ipam-scroll-<?= $subnet ? safe($subnet['id']) : 'overview' ?>';
+
+  // Restore scroll position if we just came back from a form submit
+  const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+  if (savedScroll !== null) {
+    mainEl.scrollTop = parseInt(savedScroll, 10);
+    sessionStorage.removeItem(SCROLL_KEY);
+  }
+
+  // Save scroll before any form in the main area submits
+  document.querySelectorAll('form').forEach(f => {
+    f.addEventListener('submit', () => {
+      sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
+    });
+  });
+  // Also hook the modal submit buttons which call .submit() directly
+  ['ipForm','dhcpForm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('submit', () => {
+      sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
+    });
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && activeModal) {
       e.preventDefault();
