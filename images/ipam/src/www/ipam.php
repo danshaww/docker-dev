@@ -123,7 +123,7 @@ if ($action === 'edit_ip') {
 $subnets = read_subnets();
 $subnet  = $active_subnet ? current(array_filter($subnets, fn($s) => $s['id'] === $active_subnet)) : null;
 $ips     = $subnet ? read_ips($subnet['id']) : [];
-$edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] === $_GET['edit'])) : null;
+$STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','inactive'=>'#666'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -134,73 +134,84 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── Themes ── */
   :root {
-    --bg:        #f4f6f9;
-    --bg2:       #ffffff;
-    --bg3:       #f0f2f5;
-    --sidebar:   #1a1d2e;
-    --sidebar2:  #2a2f4a;
-    --sidebar3:  #2d3150;
-    --stext:     #ccd;
-    --stext2:    #778;
-    --border:    #e8eaf0;
-    --border2:   #dde;
-    --text:      #222;
-    --text2:     #444;
-    --text3:     #666;
-    --text4:     #888;
-    --text5:     #aaa;
-    --input-bg:  #ffffff;
-    --shadow:    0 1px 4px rgba(0,0,0,.08);
-    --accent:    #2563eb;
-    --accent2:   #1d4ed8;
-    --green:     #2ecc71;
-    --orange:    #f39c12;
-    --red-bg:    #fef2f2;
-    --red-bdr:   #fca5a5;
-    --red-text:  #b91c1c;
-    --hover-row: #fafbff;
+    --bg:       #f4f6f9;
+    --bg2:      #ffffff;
+    --bg3:      #f0f2f5;
+    --sidebar:  #1a1d2e;
+    --sidebar2: #2a2f4a;
+    --sidebar3: #2d3150;
+    --stext:    #ccd;
+    --stext2:   #778;
+    --border:   #e8eaf0;
+    --border2:  #dde;
+    --text:     #222;
+    --text2:    #444;
+    --text3:    #666;
+    --text4:    #888;
+    --text5:    #aaa;
+    --input-bg: #ffffff;
+    --shadow:   0 1px 4px rgba(0,0,0,.08);
+    --modal-shadow: 0 8px 40px rgba(0,0,0,.18);
+    --accent:   #2563eb;
+    --accent2:  #1d4ed8;
+    --green:    #2ecc71;
+    --red-bg:   #fef2f2;
+    --red-bdr:  #fca5a5;
+    --red-text: #b91c1c;
+    --hover-row:#fafbff;
+    --overlay:  rgba(0,0,0,.35);
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:       #0d0f14;
+      --bg2:      #13161e;
+      --bg3:      #1c202c;
+      --sidebar:  #0a0c12;
+      --sidebar2: #161926;
+      --sidebar3: #1e2235;
+      --stext:    #aab;
+      --stext2:   #556;
+      --border:   #272b38;
+      --border2:  #2e3347;
+      --text:     #e8eaf2;
+      --text2:    #c0c4d8;
+      --text3:    #8b90a8;
+      --text4:    #666a80;
+      --text5:    #444860;
+      --input-bg: #1c202c;
+      --shadow:   0 1px 4px rgba(0,0,0,.4);
+      --modal-shadow: 0 8px 40px rgba(0,0,0,.6);
+      --accent:   #4f8ef7;
+      --accent2:  #3a6fd4;
+      --green:    #3ecf8e;
+      --red-bg:   #2a1010;
+      --red-bdr:  #7f2020;
+      --red-text: #f87171;
+      --hover-row:#1a1e2a;
+      --overlay:  rgba(0,0,0,.6);
+    }
+  }
+
+  /* manual overrides */
+  [data-theme="light"] { 
+    --bg:#f4f6f9;--bg2:#ffffff;--bg3:#f0f2f5;--sidebar:#1a1d2e;--sidebar2:#2a2f4a;--sidebar3:#2d3150;--stext:#ccd;--stext2:#778;--border:#e8eaf0;--border2:#dde;--text:#222;--text2:#444;--text3:#666;--text4:#888;--text5:#aaa;--input-bg:#ffffff;--shadow:0 1px 4px rgba(0,0,0,.08);--modal-shadow:0 8px 40px rgba(0,0,0,.18);--accent:#2563eb;--accent2:#1d4ed8;--green:#2ecc71;--red-bg:#fef2f2;--red-bdr:#fca5a5;--red-text:#b91c1c;--hover-row:#fafbff;--overlay:rgba(0,0,0,.35);
+  }
   [data-theme="dark"] {
-    --bg:        #0d0f14;
-    --bg2:       #13161e;
-    --bg3:       #1c202c;
-    --sidebar:   #0a0c12;
-    --sidebar2:  #161926;
-    --sidebar3:  #1e2235;
-    --stext:     #aab;
-    --stext2:    #556;
-    --border:    #272b38;
-    --border2:   #2e3347;
-    --text:      #e8eaf2;
-    --text2:     #c0c4d8;
-    --text3:     #8b90a8;
-    --text4:     #666a80;
-    --text5:     #444860;
-    --input-bg:  #1c202c;
-    --shadow:    0 1px 4px rgba(0,0,0,.4);
-    --accent:    #4f8ef7;
-    --accent2:   #3a6fd4;
-    --green:     #3ecf8e;
-    --orange:    #f7a94f;
-    --red-bg:    #2a1010;
-    --red-bdr:   #7f2020;
-    --red-text:  #f87171;
-    --hover-row: #1a1e2a;
+    --bg:#0d0f14;--bg2:#13161e;--bg3:#1c202c;--sidebar:#0a0c12;--sidebar2:#161926;--sidebar3:#1e2235;--stext:#aab;--stext2:#556;--border:#272b38;--border2:#2e3347;--text:#e8eaf2;--text2:#c0c4d8;--text3:#8b90a8;--text4:#666a80;--text5:#444860;--input-bg:#1c202c;--shadow:0 1px 4px rgba(0,0,0,.4);--modal-shadow:0 8px 40px rgba(0,0,0,.6);--accent:#4f8ef7;--accent2:#3a6fd4;--green:#3ecf8e;--red-bg:#2a1010;--red-bdr:#7f2020;--red-text:#f87171;--hover-row:#1a1e2a;--overlay:rgba(0,0,0,.6);
   }
 
-  body { font-family: system-ui, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .2s, color .2s; }
+  body { font-family: system-ui, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); min-height: 100vh; }
 
   /* ── Layout ── */
   .layout { display: flex; min-height: 100vh; }
   .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; }
-  .sidebar-top { padding: 16px 16px 12px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; }
-  .sidebar-top h1 { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: .03em; }
+  .sidebar-top { padding: 16px 16px 12px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .sidebar-top h1 { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
   .sidebar-top h1 small { display: block; font-size: .7rem; font-weight: 400; color: var(--stext2); margin-top: 2px; }
   .sidebar nav { flex: 1; padding: 8px; overflow-y: auto; }
-  .sidebar a { display: block; padding: 8px 10px; border-radius: 5px; color: var(--stext); text-decoration: none; font-size: .82rem; margin-bottom: 2px; }
+  .sidebar a { display: block; padding: 8px 10px; border-radius: 5px; color: var(--stext); text-decoration: none; font-size: .82rem; margin-bottom: 2px; transition: background .15s; }
   .sidebar a:hover { background: var(--sidebar2); color: #fff; }
   .sidebar a.active { background: var(--accent); color: #fff; }
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
@@ -209,12 +220,11 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
   .main { flex: 1; padding: 24px; overflow-y: auto; }
 
   /* ── Theme toggle ── */
-  .theme-btn { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 8px; cursor: pointer; font-size: .8rem; white-space: nowrap; }
+  .theme-btn { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: .78rem; white-space: nowrap; flex-shrink: 0; }
   .theme-btn:hover { background: var(--sidebar3); color: #fff; }
 
   /* ── Cards ── */
   .card { background: var(--bg2); border-radius: 8px; box-shadow: var(--shadow); padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
-  .card h2 { font-size: .82rem; font-weight: 700; margin-bottom: 14px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
 
   /* ── Stats ── */
   .stats { display: flex; gap: 12px; margin-bottom: 20px; }
@@ -234,25 +244,6 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
   .dot { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 600; }
   .dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-  /* ── Forms ── */
-  .form-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
-  .form-group { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
-  .form-group label { font-size: .7rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; }
-  input[type=text], input[type=number], select {
-    padding: 7px 9px; border: 1px solid var(--border2); border-radius: 5px;
-    font-size: .82rem; font-family: monospace; width: 100%;
-    background: var(--input-bg); color: var(--text);
-    transition: border-color .15s, box-shadow .15s;
-  }
-  input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,142,247,.15); }
-  select option { background: var(--bg2); color: var(--text); }
-
-  /* sidebar inputs */
-  .sidebar input[type=text], .sidebar input[type=number] {
-    background: var(--sidebar2); border-color: var(--sidebar3); color: #fff; font-size: .78rem;
-  }
-  .sidebar input::placeholder { color: var(--stext2); }
-
   /* ── Buttons ── */
   .btn { display: inline-flex; align-items: center; gap: 4px; padding: 7px 13px; border-radius: 5px; border: none; font-size: .78rem; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background .15s; }
   .btn-blue  { background: var(--accent); color: #fff; }
@@ -260,7 +251,8 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
   .btn-red   { background: transparent; color: var(--red-text); border: 1px solid transparent; }
   .btn-red:hover { background: var(--red-bg); border-color: var(--red-bdr); }
   .btn-grey  { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
-  .btn-grey:hover { background: var(--border); }
+  .btn-grey:hover { filter: brightness(.95); }
+  .btn-sm    { padding: 5px 10px; font-size: .74rem; }
 
   /* ── Error ── */
   .error { background: var(--red-bg); border: 1px solid var(--red-bdr); color: var(--red-text); padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: .82rem; }
@@ -275,6 +267,74 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
   .grid-card:hover { border-color: var(--accent); }
   .grid-card .cidr { font-family: monospace; font-weight: 700; font-size: .95rem; color: var(--accent); }
   .grid-card .name { font-size: .8rem; color: var(--text3); margin: 3px 0 10px; }
+
+  /* ── Page header row ── */
+  .page-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  .page-hdr h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .page-hdr .sub { font-family: monospace; font-size: .82rem; color: var(--text3); margin-top: 2px; }
+
+  /* ── Keyboard hint ── */
+  kbd { display: inline-block; padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border2); background: var(--bg3); font-size: .72rem; font-family: monospace; color: var(--text3); }
+
+  /* ── Modal overlay ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--overlay);
+    backdrop-filter: blur(3px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--modal-shadow);
+    width: 480px;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    animation: modal-in .15s ease;
+  }
+  @keyframes modal-in { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: none; } }
+
+  .modal-hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 18px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-hdr h3 { font-size: .95rem; font-weight: 700; }
+  .modal-close { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 1.1rem; padding: 2px 6px; border-radius: 4px; line-height: 1; }
+  .modal-close:hover { background: var(--bg3); color: var(--text); }
+  .modal-body { padding: 18px; }
+  .modal-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+  /* ── Form fields inside modal ── */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: .7rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
+  .field input, .field select {
+    width: 100%; padding: 8px 10px;
+    border: 1px solid var(--border2); border-radius: 5px;
+    font-size: .85rem; font-family: monospace;
+    background: var(--input-bg); color: var(--text);
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79,142,247,.15); }
+  .field input[readonly] { opacity: .6; cursor: default; }
+  .field select option { background: var(--bg2); color: var(--text); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-error { font-size: .75rem; color: var(--red-text); margin-top: 4px; display: none; }
+  .field-error.show { display: block; }
+
+  /* sidebar inputs */
+  .sidebar .field input, .sidebar .field select {
+    background: var(--sidebar2); border-color: var(--sidebar3); color: #fff; font-size: .8rem;
+  }
+  .sidebar .field input::placeholder { color: var(--stext2); }
+  .sidebar .field label { color: var(--stext2); }
 </style>
 </head>
 <body>
@@ -284,7 +344,7 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
 <aside class="sidebar">
   <div class="sidebar-top">
     <h1>IPAM <small>IP Address Manager</small></h1>
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+    <button class="theme-btn" onclick="cycleTheme()" id="themeBtn">⚙</button>
   </div>
   <nav>
     <a href="ipam.php" <?= !$subnet ? 'class="active"' : '' ?>>🌐 Overview</a>
@@ -296,17 +356,17 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
     <?php endforeach; ?>
   </nav>
   <footer>
+    <div style="color:var(--stext2);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Add Subnet</div>
     <form method="post" action="ipam.php" style="display:flex;flex-direction:column;gap:8px">
       <input type="hidden" name="action" value="add_subnet">
-      <div style="color:var(--stext2);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Add Subnet</div>
-      <input type="text"   name="name"    placeholder="Name (optional)">
+      <div class="field" style="margin:0"><input type="text" name="name" placeholder="Name (optional)"></div>
       <div style="display:flex;gap:6px">
-        <input type="text"   name="network"  placeholder="192.168.1.0" style="flex:2">
-        <input type="number" name="prefix"   placeholder="24" min="1" max="32" style="flex:1;width:50px">
+        <div class="field" style="margin:0;flex:2"><input type="text" name="network" placeholder="192.168.1.0" required></div>
+        <div class="field" style="margin:0;width:58px"><input type="number" name="prefix" placeholder="24" min="1" max="32" required></div>
       </div>
       <div style="display:flex;gap:6px">
-        <input type="text" name="gateway" placeholder="Gateway" style="flex:1">
-        <input type="text" name="vlan"    placeholder="VLAN"    style="width:54px">
+        <div class="field" style="margin:0;flex:1"><input type="text" name="gateway" placeholder="Gateway"></div>
+        <div class="field" style="margin:0;width:58px"><input type="text" name="vlan" placeholder="VLAN"></div>
       </div>
       <button class="btn btn-blue" style="width:100%;justify-content:center">+ Add Subnet</button>
     </form>
@@ -319,7 +379,9 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
 
   <?php if (!$subnet): ?>
   <!-- OVERVIEW -->
-  <h2 style="margin-bottom:16px;font-size:1rem;color:var(--text2)">Overview</h2>
+  <div class="page-hdr">
+    <h2>Overview</h2>
+  </div>
   <?php if (!$subnets): ?>
     <div class="card" style="text-align:center;padding:40px;color:var(--text4)">
       <div style="font-size:2rem;margin-bottom:8px">🌐</div>
@@ -352,22 +414,24 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
     $free = max(0, $u - $used);
     $pct  = $u > 0 ? round($used / $u * 100) : 0;
     $col  = $pct >= 90 ? '#e74c3c' : ($pct >= 70 ? '#f39c12' : '#2ecc71');
-    $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','inactive'=>'#666'];
   ?>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap">
+  <div class="page-hdr">
     <div>
-      <h2 style="font-size:1.05rem;font-weight:700;color:var(--text)"><?= safe($subnet['name']) ?></h2>
-      <div style="font-family:monospace;font-size:.82rem;color:var(--text3)">
-        <?= safe($subnet['network']) ?>/<?= safe($subnet['prefix']) ?>
+      <h2><?= safe($subnet['name']) ?></h2>
+      <div class="sub"><?= safe($subnet['network']) ?>/<?= safe($subnet['prefix']) ?>
         <?= $subnet['gateway'] ? " · GW {$subnet['gateway']}" : '' ?>
         <?= $subnet['vlan']    ? " · VLAN {$subnet['vlan']}"  : '' ?>
       </div>
     </div>
-    <form method="post" onsubmit="return confirm('Delete this subnet and all its IPs?')">
-      <input type="hidden" name="action" value="delete_subnet">
-      <input type="hidden" name="id"     value="<?= $subnet['id'] ?>">
-      <button class="btn btn-red">🗑 Delete subnet</button>
-    </form>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="font-size:.75rem;color:var(--text4)">Press <kbd>N</kbd> to add</span>
+      <button class="btn btn-blue" onclick="openAddIp()">+ Add IP</button>
+      <form method="post" onsubmit="return confirm('Delete this subnet and all its IPs?')" style="margin:0">
+        <input type="hidden" name="action" value="delete_subnet">
+        <input type="hidden" name="id"     value="<?= $subnet['id'] ?>">
+        <button class="btn btn-red">🗑 Delete subnet</button>
+      </form>
+    </div>
   </div>
 
   <div class="stats">
@@ -377,51 +441,6 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
     <div class="stat"><div class="val" style="color:<?= $col ?>"><?= $pct ?>%</div><div class="lbl">Utilisation</div></div>
   </div>
 
-  <div class="card">
-    <h2><?= $edit_ip ? 'Edit IP' : 'Add IP Address' ?></h2>
-    <form method="post" action="ipam.php?subnet=<?= $subnet['id'] ?>">
-      <input type="hidden" name="action"    value="<?= $edit_ip ? 'edit_ip' : 'add_ip' ?>">
-      <input type="hidden" name="subnet_id" value="<?= $subnet['id'] ?>">
-      <?php if ($edit_ip): ?><input type="hidden" name="id" value="<?= $edit_ip['id'] ?>"><?php endif; ?>
-      <div class="form-row">
-        <div class="form-group" style="min-width:150px">
-          <label>IP Address</label>
-          <input type="text" name="ip" placeholder="<?= safe($subnet['network']) ?>" value="<?= $edit_ip ? safe($edit_ip['ip']) : '' ?>" <?= $edit_ip ? 'readonly style="opacity:.6"' : '' ?> required>
-        </div>
-        <div class="form-group" style="min-width:160px">
-          <label>Hostname</label>
-          <input type="text" name="hostname" placeholder="server-01.local" value="<?= $edit_ip ? safe($edit_ip['hostname']) : '' ?>">
-        </div>
-        <div class="form-group" style="min-width:150px">
-          <label>MAC Address</label>
-          <input type="text" name="mac" placeholder="AA:BB:CC:DD:EE:FF" value="<?= $edit_ip ? safe($edit_ip['mac']) : '' ?>">
-        </div>
-        <div class="form-group" style="min-width:110px">
-          <label>Status</label>
-          <select name="status">
-            <?php foreach (['active','reserved','dhcp','inactive'] as $st): ?>
-              <option value="<?= $st ?>" <?= ($edit_ip && $edit_ip['status']===$st) ? 'selected' : '' ?>><?= ucfirst($st) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div class="form-group" style="flex:1;min-width:160px">
-          <label>Note</label>
-          <input type="text" name="note" placeholder="Optional note" value="<?= $edit_ip ? safe($edit_ip['note']) : '' ?>">
-        </div>
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button class="btn btn-blue"><?= $edit_ip ? 'Save Changes' : '+ Add IP' ?></button>
-        </div>
-        <?php if ($edit_ip): ?>
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <a href="ipam.php?subnet=<?= $subnet['id'] ?>" class="btn btn-grey">Cancel</a>
-        </div>
-        <?php endif; ?>
-      </div>
-    </form>
-  </div>
-
   <div class="card" style="padding:0;overflow:hidden">
     <table>
       <thead><tr>
@@ -429,7 +448,9 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
       </tr></thead>
       <tbody>
       <?php if (!$ips): ?>
-        <tr><td colspan="7" style="text-align:center;color:var(--text5);padding:28px">No IPs allocated yet.</td></tr>
+        <tr><td colspan="7" style="text-align:center;color:var(--text5);padding:28px">
+          No IPs allocated yet — press <kbd>N</kbd> or click <b>+ Add IP</b> to begin.
+        </td></tr>
       <?php else: foreach ($ips as $r):
         $sc = $STATUS_COLORS[$r['status']] ?? '#888';
       ?>
@@ -441,12 +462,13 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
           <td><?= safe($r['note']) ?: '—' ?></td>
           <td style="color:var(--text5);font-size:.75rem"><?= safe($r['updated']) ?></td>
           <td style="white-space:nowrap">
-            <a href="ipam.php?subnet=<?= $subnet['id'] ?>&edit=<?= $r['id'] ?>" class="btn btn-grey" style="font-size:.72rem">Edit</a>
+            <button class="btn btn-grey btn-sm"
+              onclick="openEditIp(<?= htmlspecialchars(json_encode($r), ENT_QUOTES) ?>)">Edit</button>
             <form method="post" style="display:inline" onsubmit="return confirm('Release <?= safe($r['ip']) ?>?')">
               <input type="hidden" name="action"    value="delete_ip">
               <input type="hidden" name="subnet_id" value="<?= $subnet['id'] ?>">
               <input type="hidden" name="id"        value="<?= $r['id'] ?>">
-              <button class="btn btn-red" style="font-size:.72rem">Delete</button>
+              <button class="btn btn-red btn-sm">Delete</button>
             </form>
           </td>
         </tr>
@@ -457,20 +479,145 @@ $edit_ip = isset($_GET['edit']) ? current(array_filter($ips, fn($r) => $r['id'] 
   <?php endif; ?>
 </main>
 </div>
-<script>
-  const btn = document.getElementById('themeBtn');
-  const html = document.documentElement;
-  const saved = localStorage.getItem('ipam-theme') || 'light';
-  setTheme(saved);
 
-  function setTheme(t) {
-    html.dataset.theme = t;
-    btn.textContent = t === 'dark' ? '☀️ Light' : '🌙 Dark';
-    localStorage.setItem('ipam-theme', t);
+<!-- ── IP Modal ── -->
+<div class="modal-overlay" id="ipModal" onclick="if(event.target===this)closeIpModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3 id="modalTitle">Add IP Address</h3>
+      <button class="modal-close" onclick="closeIpModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="ipam.php?subnet=<?= $subnet ? safe($subnet['id']) : '' ?>" id="ipForm">
+        <input type="hidden" name="action"    id="f_action"    value="add_ip">
+        <input type="hidden" name="subnet_id" id="f_subnet_id" value="<?= $subnet ? safe($subnet['id']) : '' ?>">
+        <input type="hidden" name="id"        id="f_id"        value="">
+
+        <div class="field">
+          <label>IP Address *</label>
+          <input type="text" name="ip" id="f_ip" placeholder="<?= $subnet ? safe($subnet['network']) : '0.0.0.0' ?>" required>
+          <div class="field-error" id="f_ip_err"></div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Hostname</label>
+            <input type="text" name="hostname" id="f_hostname" placeholder="server-01.local">
+          </div>
+          <div class="field">
+            <label>Owner</label>
+            <input type="text" name="owner" id="f_owner" placeholder="Alice">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>MAC Address</label>
+            <input type="text" name="mac" id="f_mac" placeholder="AA:BB:CC:DD:EE:FF">
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select name="status" id="f_status">
+              <option value="active">Active</option>
+              <option value="reserved">Reserved</option>
+              <option value="dhcp">DHCP</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Note</label>
+          <input type="text" name="note" id="f_note" placeholder="Optional note">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-grey" onclick="closeIpModal()">Cancel</button>
+      <button class="btn btn-blue" onclick="document.getElementById('ipForm').submit()" id="modalSubmit">Add IP</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Theme ──────────────────────────────────────────────────────────────────
+  // Modes: 'system' | 'light' | 'dark'
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const MODES = ['system','light','dark'];
+  const ICONS = { system:'⚙ Auto', light:'☀️ Light', dark:'🌙 Dark' };
+
+  let mode = localStorage.getItem('ipam-theme') || 'system';
+
+  function applyTheme() {
+    if (mode === 'system') {
+      html.removeAttribute('data-theme');
+    } else {
+      html.dataset.theme = mode;
+    }
+    btn.textContent = ICONS[mode];
   }
-  function toggleTheme() {
-    setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+
+  function cycleTheme() {
+    mode = MODES[(MODES.indexOf(mode) + 1) % MODES.length];
+    localStorage.setItem('ipam-theme', mode);
+    applyTheme();
   }
+
+  applyTheme();
+
+  // ── IP Modal ───────────────────────────────────────────────────────────────
+  const modal = document.getElementById('ipModal');
+
+  function openAddIp() {
+    document.getElementById('modalTitle').textContent   = 'Add IP Address';
+    document.getElementById('modalSubmit').textContent  = 'Add IP';
+    document.getElementById('f_action').value           = 'add_ip';
+    document.getElementById('f_id').value               = '';
+    document.getElementById('f_ip').value               = '';
+    document.getElementById('f_ip').readOnly            = false;
+    document.getElementById('f_hostname').value         = '';
+    document.getElementById('f_owner').value            = '';
+    document.getElementById('f_mac').value              = '';
+    document.getElementById('f_status').value           = 'active';
+    document.getElementById('f_note').value             = '';
+    modal.classList.add('open');
+    setTimeout(() => document.getElementById('f_ip').focus(), 50);
+  }
+
+  function openEditIp(r) {
+    document.getElementById('modalTitle').textContent   = 'Edit IP Address';
+    document.getElementById('modalSubmit').textContent  = 'Save Changes';
+    document.getElementById('f_action').value           = 'edit_ip';
+    document.getElementById('f_id').value               = r.id;
+    document.getElementById('f_ip').value               = r.ip;
+    document.getElementById('f_ip').readOnly            = true;
+    document.getElementById('f_hostname').value         = r.hostname  || '';
+    document.getElementById('f_owner').value            = r.owner     || '';
+    document.getElementById('f_mac').value              = r.mac       || '';
+    document.getElementById('f_status').value           = r.status    || 'active';
+    document.getElementById('f_note').value             = r.note      || '';
+    modal.classList.add('open');
+    setTimeout(() => document.getElementById('f_hostname').focus(), 50);
+  }
+
+  function closeIpModal() {
+    modal.classList.remove('open');
+  }
+
+  // ── Keyboard shortcuts ─────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    // ignore when typing in an input
+    if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+
+    if (e.key === 'n' || e.key === 'N') {
+      <?php if ($subnet): ?>
+      e.preventDefault();
+      openAddIp();
+      <?php endif; ?>
+    }
+
+    if (e.key === 'Escape') {
+      closeIpModal();
+    }
+  });
 </script>
 </body>
 </html>
