@@ -90,6 +90,28 @@ if ($action === 'delete_subnet') {
     header('Location: ipam.php'); exit;
 }
 
+if ($action === 'edit_subnet') {
+    $id  = $_POST['id'] ?? '';
+    $net = trim($_POST['network'] ?? '');
+    $pfx = (int)($_POST['prefix'] ?? 0);
+    if (!valid_ip($net))            $error = 'Invalid network address.';
+    elseif ($pfx < 1 || $pfx > 32) $error = 'Prefix must be 1–32.';
+    else {
+        $subnets = read_subnets();
+        foreach ($subnets as &$s) {
+            if ($s['id'] === $id) {
+                $s['name']    = trim($_POST['name'] ?? '') ?: "$net/$pfx";
+                $s['network'] = $net;
+                $s['prefix']  = $pfx;
+                $s['gateway'] = trim($_POST['gateway'] ?? '');
+                $s['vlan']    = trim($_POST['vlan'] ?? '');
+            }
+        }
+        write_subnets($subnets);
+        header("Location: ipam.php?subnet=$id"); exit;
+    }
+}
+
 if ($action === 'add_ip') {
     $sid = $_POST['subnet_id'] ?? '';
     $ip  = trim($_POST['ip'] ?? '');
@@ -306,7 +328,14 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .modal-body   { padding: 16px; }
   .modal-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
 
-  /* ── Form fields ── */
+  /* ── Context menu ── */
+  .ctx-menu { position: fixed; background: var(--bg2); border: 1px solid var(--border); border-radius: 7px; box-shadow: var(--modal-shadow); padding: 4px; z-index: 500; min-width: 150px; display: none; }
+  .ctx-menu.open { display: block; }
+  .ctx-item { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 5px; font-size: .82rem; cursor: pointer; color: var(--text2); white-space: nowrap; }
+  .ctx-item:hover { background: var(--bg3); color: var(--text); }
+  .ctx-item.danger { color: var(--red-text); }
+  .ctx-item.danger:hover { background: var(--red-bg); }
+  .ctx-sep { height: 1px; background: var(--border); margin: 3px 4px; }
   .field { margin-bottom: 12px; }
   .field:last-child { margin-bottom: 0; }
   .field label { display: block; font-size: .68rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
@@ -392,6 +421,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <span style="font-size:.75rem;color:var(--text4)">Press <kbd>N</kbd> to add</span>
+      <button class="btn btn-grey" onclick="openEditSubnetModal()">✏️ Edit</button>
       <button class="btn btn-grey" onclick="openDhcpModal()">⚡ DHCP Scope</button>
       <button class="btn btn-blue" onclick="openAddIp()">+ Add IP</button>
       <form method="post" onsubmit="return confirm('Delete this subnet and all its IPs?')" style="margin:0">
@@ -432,7 +462,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
           $r  = $used_map[$ip];
           $sc = $STATUS_COLORS[$r['status']] ?? '#888';
       ?>
-        <tr class="allocated">
+        <tr class="allocated" oncontextmenu="showCtx(event, <?= htmlspecialchars(json_encode($r), ENT_QUOTES) ?>)">
           <td class="mono"><?= safe($ip) ?></td>
           <td class="mono"><?= safe($r['hostname']) ?: '—' ?></td>
           <td><span class="dot" style="color:<?= $sc ?>"><?= safe($r['status']) ?></span></td>
@@ -449,7 +479,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
           </td>
         </tr>
       <?php else: ?>
-        <tr class="free" onclick="openAddIpPrefilled('<?= safe($ip) ?>')">
+        <tr class="free" onclick="openAddIpPrefilled('<?= safe($ip) ?>')" oncontextmenu="showCtxFree(event, '<?= safe($ip) ?>')">
           <td class="mono"><?= safe($ip) ?></td>
           <td colspan="4" style="font-size:.75rem;font-style:italic">free</td>
           <td style="text-align:right">
@@ -463,6 +493,58 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   <?php endif; ?>
 </div><!-- /.main-inner -->
 </main>
+</div>
+
+<!-- ── Context menu ── -->
+<div class="ctx-menu" id="ctxMenu">
+  <div class="ctx-item" id="ctxEdit"   onclick="ctxAction('edit')">✏️ Edit</div>
+  <div class="ctx-item" id="ctxAssign" onclick="ctxAction('assign')">＋ Assign</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" id="ctxDelete" onclick="ctxAction('delete')">🗑 Delete</div>
+</div>
+
+<!-- ── Edit Subnet Modal ── -->
+<div class="modal-overlay" id="editSubnetModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3>Edit Subnet</h3>
+      <button class="modal-close" onclick="closeModal('editSubnetModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="ipam.php?subnet=<?= $subnet ? safe($subnet['id']) : '' ?>" id="editSubnetForm">
+        <input type="hidden" name="action" value="edit_subnet">
+        <input type="hidden" name="id"     value="<?= $subnet ? safe($subnet['id']) : '' ?>">
+        <div class="field">
+          <label>Name</label>
+          <input type="text" name="name" id="esn_name" placeholder="e.g. Office LAN">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Network Address *</label>
+            <input type="text" name="network" id="esn_network" placeholder="192.168.1.0" required>
+          </div>
+          <div class="field">
+            <label>Prefix Length *</label>
+            <input type="number" name="prefix" id="esn_prefix" placeholder="24" min="1" max="32" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Gateway</label>
+            <input type="text" name="gateway" id="esn_gateway" placeholder="192.168.1.1">
+          </div>
+          <div class="field">
+            <label>VLAN</label>
+            <input type="text" name="vlan" id="esn_vlan" placeholder="100">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-grey" onclick="closeModal('editSubnetModal')">Cancel</button>
+      <button class="btn btn-blue" onclick="submitForm('editSubnetForm')">Save Changes</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── IP Modal ── -->
@@ -646,6 +728,83 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     setTimeout(() => document.getElementById('dhcp_start').focus(), 50);
   }
 
+  // ── Edit subnet modal ─────────────────────────────────────────────────────
+  <?php if ($subnet): ?>
+  const SUBNET_DATA = <?= json_encode($subnet) ?>;
+  <?php else: ?>
+  const SUBNET_DATA = null;
+  <?php endif; ?>
+
+  function openEditSubnetModal() {
+    if (!SUBNET_DATA) return;
+    document.getElementById('esn_name').value    = SUBNET_DATA.name    || '';
+    document.getElementById('esn_network').value = SUBNET_DATA.network || '';
+    document.getElementById('esn_prefix').value  = SUBNET_DATA.prefix  || '';
+    document.getElementById('esn_gateway').value = SUBNET_DATA.gateway || '';
+    document.getElementById('esn_vlan').value    = SUBNET_DATA.vlan    || '';
+    openModal('editSubnetModal');
+    setTimeout(() => document.getElementById('esn_name').focus(), 50);
+  }
+
+  // ── Context menu ──────────────────────────────────────────────────────────
+  const ctxMenu = document.getElementById('ctxMenu');
+  let ctxRow    = null;
+
+  function showCtx(e, r) {
+    e.preventDefault();
+    ctxRow = { type: 'allocated', data: r };
+    document.getElementById('ctxEdit').style.display   = '';
+    document.getElementById('ctxAssign').style.display = 'none';
+    document.getElementById('ctxDelete').style.display = '';
+    positionCtx(e);
+  }
+
+  function showCtxFree(e, ip) {
+    e.preventDefault();
+    e.stopPropagation();
+    ctxRow = { type: 'free', data: ip };
+    document.getElementById('ctxEdit').style.display   = 'none';
+    document.getElementById('ctxAssign').style.display = '';
+    document.getElementById('ctxDelete').style.display = 'none';
+    positionCtx(e);
+  }
+
+  function positionCtx(e) {
+    ctxMenu.classList.add('open');
+    // Must be visible to measure; position off-screen first
+    ctxMenu.style.left = '-9999px';
+    ctxMenu.style.top  = '-9999px';
+    requestAnimationFrame(() => {
+      const mw = ctxMenu.offsetWidth;
+      const mh = ctxMenu.offsetHeight;
+      ctxMenu.style.left = (e.clientX + mw > window.innerWidth  ? e.clientX - mw : e.clientX) + 'px';
+      ctxMenu.style.top  = (e.clientY + mh > window.innerHeight ? e.clientY - mh : e.clientY) + 'px';
+    });
+  }
+
+  function ctxAction(action) {
+    ctxMenu.classList.remove('open');
+    if (!ctxRow) return;
+    if (action === 'edit'   && ctxRow.type === 'allocated') openEditIp(ctxRow.data);
+    if (action === 'assign' && ctxRow.type === 'free')      openAddIpPrefilled(ctxRow.data);
+    if (action === 'delete' && ctxRow.type === 'allocated') {
+      if (confirm('Release ' + ctxRow.data.ip + '?')) {
+        sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
+        const f = document.createElement('form');
+        f.method = 'post';
+        f.innerHTML = '<input name="action" value="delete_ip">'
+          + '<input name="subnet_id" value="<?= $subnet ? safe($subnet['id']) : '' ?>">'
+          + '<input name="id" value="' + ctxRow.data.id + '">';
+        document.body.appendChild(f);
+        f.submit();
+      }
+    }
+    ctxRow = null;
+  }
+
+  document.addEventListener('click',  () => ctxMenu.classList.remove('open'));
+  document.addEventListener('scroll', () => ctxMenu.classList.remove('open'), true);
+
   // ── IP modal ───────────────────────────────────────────────────────────────
   const NEXT_IP = <?= json_encode($next_ip) ?>;
 
@@ -720,9 +879,10 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
       const tag = e.target.tagName;
       if (tag === 'INPUT' || tag === 'SELECT') {
         e.preventDefault();
-        if (activeModal === 'ipModal')     submitForm('ipForm');
-        if (activeModal === 'dhcpModal')   submitForm('dhcpForm');
-        if (activeModal === 'subnetModal') submitForm('subnetForm');
+        if (activeModal === 'ipModal')          submitForm('ipForm');
+        if (activeModal === 'dhcpModal')        submitForm('dhcpForm');
+        if (activeModal === 'subnetModal')      submitForm('subnetForm');
+        if (activeModal === 'editSubnetModal')  submitForm('editSubnetForm');
       }
       return;
     }
