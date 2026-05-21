@@ -2,18 +2,17 @@ FROM alpine:3.19
 
 RUN apk add --no-cache nginx php83 php83-fpm supervisor
 
-# Bake in configs
 COPY src/nginx.conf /etc/nginx/nginx.conf
 COPY src/supervisord.conf /etc/supervisord.conf
 
-# PHP-FPM: listen on unix socket
 RUN sed -i 's|listen = 127.0.0.1:9000|listen = /run/php-fpm.sock|' /etc/php83/php-fpm.d/www.conf \
  && sed -i 's|;listen.owner = nobody|listen.owner = nobody|' /etc/php83/php-fpm.d/www.conf \
  && sed -i 's|;listen.group = nobody|listen.group = nobody|' /etc/php83/php-fpm.d/www.conf
 
-# App
 COPY src/www/ /var/www/html/
 RUN chown -R nobody:nobody /var/www/html
+
+RUN mkdir -p /data && chown nobody:nobody /data
 
 EXPOSE 80
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
