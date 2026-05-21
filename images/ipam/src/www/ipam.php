@@ -218,10 +218,11 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   [data-theme="light"] { --bg:#f4f6f9;--bg2:#ffffff;--bg3:#f0f2f5;--sidebar:#1a1d2e;--sidebar2:#2a2f4a;--sidebar3:#2d3150;--stext:#ccd;--stext2:#778;--border:#e8eaf0;--border2:#dde;--text:#222;--text2:#444;--text3:#666;--text4:#888;--text5:#bbb;--input-bg:#ffffff;--shadow:0 1px 4px rgba(0,0,0,.08);--modal-shadow:0 8px 40px rgba(0,0,0,.18);--accent:#2563eb;--accent2:#1d4ed8;--green:#2ecc71;--red-bg:#fef2f2;--red-bdr:#fca5a5;--red-text:#b91c1c;--hover-row:#f5f7ff;--free-text:#bcc0cc;--overlay:rgba(0,0,0,.35); }
   [data-theme="dark"]  { --bg:#0d0f14;--bg2:#13161e;--bg3:#1c202c;--sidebar:#0a0c12;--sidebar2:#161926;--sidebar3:#1e2235;--stext:#aab;--stext2:#556;--border:#272b38;--border2:#2e3347;--text:#e8eaf2;--text2:#c0c4d8;--text3:#8b90a8;--text4:#666a80;--text5:#3a3e52;--input-bg:#1c202c;--shadow:0 1px 4px rgba(0,0,0,.4);--modal-shadow:0 8px 40px rgba(0,0,0,.6);--accent:#4f8ef7;--accent2:#3a6fd4;--green:#3ecf8e;--red-bg:#2a1010;--red-bdr:#7f2020;--red-text:#f87171;--hover-row:#1a1e2a;--free-text:#383c50;--overlay:rgba(0,0,0,.6); }
 
-  body { font-family: system-ui, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body { font-family: system-ui, sans-serif; font-size: 15px; background: var(--bg); color: var(--text); }
 
   /* ── Layout ── */
-  .layout  { display: flex; min-height: 100vh; }
+  html, body { height: 100%; overflow: hidden; }
+  .layout  { display: flex; height: 100vh; }
   .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; }
   .sidebar-top { padding: 14px 12px 10px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .sidebar-top h1 { font-size: .95rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
@@ -233,7 +234,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .sidebar a.active { background: var(--accent); color: #fff; }
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
   .sidebar a .meta { font-size: .7rem; opacity: .7; }
-  .main { flex: 1; padding: 24px; overflow-y: auto; }
+  .main { flex: 1; padding: 24px; overflow-y: auto; height: 100vh; }
   .main-inner { max-width: 1400px; margin: 0 auto; }
 
   /* ── Sidebar buttons ── */
@@ -689,25 +690,20 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   const mainEl = document.querySelector('.main');
   const SCROLL_KEY = 'ipam-scroll-<?= $subnet ? safe($subnet['id']) : 'overview' ?>';
 
-  // Restore scroll position if we just came back from a form submit
   const savedScroll = sessionStorage.getItem(SCROLL_KEY);
   if (savedScroll !== null) {
     mainEl.scrollTop = parseInt(savedScroll, 10);
     sessionStorage.removeItem(SCROLL_KEY);
   }
 
-  // Save scroll before any form in the main area submits
-  document.querySelectorAll('form').forEach(f => {
-    f.addEventListener('submit', () => {
-      sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
-    });
-  });
-  // Also hook the modal submit buttons which call .submit() directly
+  function saveScroll() {
+    sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
+  }
+
+  document.querySelectorAll('form').forEach(f => f.addEventListener('submit', saveScroll));
   ['ipForm','dhcpForm'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.addEventListener('submit', () => {
-      sessionStorage.setItem(SCROLL_KEY, mainEl.scrollTop);
-    });
+    if (el) el.addEventListener('submit', saveScroll);
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && activeModal) {
