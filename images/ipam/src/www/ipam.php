@@ -234,6 +234,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
   .sidebar a .meta { font-size: .7rem; opacity: .7; }
   .main { flex: 1; padding: 24px; overflow-y: auto; }
+  .main-inner { max-width: 1100px; margin: 0 auto; }
 
   /* ── Sidebar buttons ── */
   .theme-btn { background: var(--sidebar2); border: 1px solid var(--sidebar3); color: var(--stext); border-radius: 5px; padding: 4px 7px; cursor: pointer; font-size: .75rem; white-space: nowrap; flex-shrink: 0; }
@@ -339,9 +340,10 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   </nav>
 </aside>
 
-<!-- ── Main ── -->
+<!-- __ Main __ -->
 <main class="main">
-  <?php if ($error): ?><div class="error">⚠ <?= safe($error) ?></div><?php endif; ?>
+<div class="main-inner">
+  <?php if ($error): ?><div class="error">&#9888; <?= safe($error) ?></div><?php endif; ?>
 
   <?php if (!$subnet): ?>
   <div class="page-hdr"><h2>Overview</h2></div>
@@ -458,6 +460,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     </table>
   </div>
   <?php endif; ?>
+</div><!-- /.main-inner -->
 </main>
 </div>
 
