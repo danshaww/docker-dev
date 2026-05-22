@@ -78,9 +78,6 @@ sections:
       - name: TrueCommand
         url: https://truecommand.epichouse.co.uk/
         icon: truecommand
-      - name: Dockhand
-        url: https://dockhand.epichouse.co.uk/nagios/
-        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/dockhand.png
       - name: Grafana
         url: https://grafana.epichouse.co.uk
         icon: grafana
