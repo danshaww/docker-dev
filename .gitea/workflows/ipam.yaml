@@ -14,7 +14,7 @@ env:
   dev_deploy: true
   prod_server: ldnappprd1
   prod_compose_project: ipam
-  prod_deploy: false
+  prod_deploy: true
 
 jobs:
   build-dev:
