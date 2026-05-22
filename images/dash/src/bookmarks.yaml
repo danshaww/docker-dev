@@ -71,7 +71,7 @@ sections:
         icon: https://snippets.epichouse.co.uk/logo.png
       - name: Epichouse Site
         url: https://epichouse.co.uk/
-        icon: https://dash.epichouse.co.uk/logo.png
+        icon: https://epichouse.co.uk/logo.png
       - name: Homelab Dashboard
         url: https://dash.epichouse.co.uk/
         icon: https://dash.epichouse.co.uk/logo.png
