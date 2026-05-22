@@ -84,6 +84,9 @@ sections:
       - name: Grafana
         url: https://grafana.epichouse.co.uk
         icon: grafana
+      - name: IP Address Manager
+        url: https://ipam.epichouse.co.uk
+        icon: https://ipam.epichouse.co.uk/logo.png
 
   - title: Test Applications
     theme: purple
@@ -139,6 +142,9 @@ sections:
       - name: Rustfs
         url: https://rustfs-test-ui.epichouse.co.uk
         icon: rustfs
+      - name: IP Address Manager
+        url: https://ipam.epichouse.co.uk
+        icon: https://ipam.epichouse.co.uk/logo.png
 
   - title: Cloud Services
     theme: cyan
