@@ -1,0 +1,69 @@
+on:
+  push:
+    paths:
+      - images/vitepress/**
+  workflow_dispatch:
+
+env:
+  image_location: ./images/vitepress
+  image_name: vitepress
+  registry: gitea.epichouse.co.uk
+  owner: dan
+  dev_server: ldnapptst1
+  dev_compose_project: vitepress-test
+  dev_deploy: false
+  prod_server: ldnappprd1
+  prod_compose_project: vitepress
+  prod_deploy: false
+
+jobs:
+  build-dev:
+    runs-on: london
+    defaults:
+      run:
+        working-directory: ${{ env.image_location }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development -f dockerfile .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
+  deploy-dev:
+    runs-on: london
+    if: ${{ env.dev_deploy == 'true' }}
+    needs: build-dev
+    steps:
+      - name: Pull Image (DEV)
+        run: |
+          ssh sa@${{ env.dev_server }} \
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml up -d"
+
+  build-prod:
+    runs-on: london
+    defaults:
+      run:
+        working-directory: ${{ env.image_location }}
+    needs: deploy-dev
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Authenticate with Gitea
+        run: docker login ${{ env.registry }} -u ${{ secrets.username }} -p ${{ secrets.password }}
+      - name: Build Docker Image
+        run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
+      - name: Push Docker Image
+        run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
+  deploy-prod:
+    runs-on: london
+    if: ${{ env.prod_deploy == 'true' }}
+    needs: build-prod
+    steps:
+      - name: Pull Image (PROD)
+        run: |
+          ssh sa@${{ env.prod_server }} \
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml up -d"
