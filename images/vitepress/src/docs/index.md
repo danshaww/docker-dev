@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Documentation
-      link: /placeholder
+      link: /docs
     - theme: alt
       text: IP Address Manager
       link: https://ipam.epichouse.co.uk

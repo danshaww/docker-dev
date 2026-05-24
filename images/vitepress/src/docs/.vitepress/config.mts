@@ -16,7 +16,7 @@ export default defineConfig({
       capitalizeFirst: true,
       useTitleFromFrontmatter: true,
       useTitleFromFileHeading: true,
-      excludePattern: ['index.md','images/*'],
+      excludePattern: ['index.md','images/*','docs.md'],
     }),
 
     search: {
