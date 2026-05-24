@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { generateSidebar } from 'vitepress-sidebar'
 
 export default defineConfig({
   title: 'My Docs',
@@ -10,15 +11,14 @@ export default defineConfig({
       { text: 'Guide', link: '/guide/getting-started' },
     ],
 
-    sidebar: [
-      {
-        text: 'Guide',
-        items: [
-          { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Configuration', link: '/guide/configuration' },
-        ],
-      },
-    ],
+    sidebar: generateSidebar({
+      documentRootPath: 'docs',
+      collapsed: false,
+      capitalizeFirst: true,
+      useTitleFromFrontmatter: true,
+      useTitleFromFileHeading: true,
+      excludePattern: ['index.md'],
+    }),
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/your-org/your-repo' },
