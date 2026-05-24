@@ -19,6 +19,10 @@ export default defineConfig({
       excludePattern: ['index.md','images/*'],
     }),
 
+    search: {
+      provider: 'local',
+    },
+
     socialLinks: [
       { icon: 'gitea', link: 'https://gitea.epichouse.co.uk/dan/docker-dev' },
     ],
