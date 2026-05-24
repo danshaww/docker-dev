@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 import { generateSidebar } from 'vitepress-sidebar'
 
 export default defineConfig({
-  title: 'My Docs',
+  title: 'Docs',
   description: 'A VitePress documentation site',
 
   themeConfig: {
@@ -20,7 +20,7 @@ export default defineConfig({
     }),
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/your-org/your-repo' },
+      { icon: 'gitea', link: 'https://gitea.epichouse.co.uk/dan/docker-dev' },
     ],
   },
 })

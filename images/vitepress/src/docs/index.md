@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: Test Docs
-      link: /test
+      link: /placeholder
     - theme: alt
       text: View on Gitea
       link: https://gitea.epichouse.co.uk/dan/docker-dev
