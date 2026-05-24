@@ -2,16 +2,22 @@
 layout: home
 
 hero:
-  name: "Epichouse Documentation"
-  text: "This is a test"
+  name: Epichouse
+  text: Documentation Site
   tagline: Built with VitePress and served via Docker
   actions:
     - theme: brand
-      text: Test Docs
+      text: Documentation
       link: /placeholder
     - theme: alt
-      text: View on Gitea
-      link: https://gitea.epichouse.co.uk/dan/docker-dev
+      text: IP Address Manager
+      link: https://ipam.epichouse.co.uk
+    - theme: alt
+      text: Code Snippets
+      link: https://snippets.epichouse.co.uk
+    - theme: alt
+      text: Dashboard
+      link: https://dash.epichouse.co.uk
 
 features:
   - title: Fast

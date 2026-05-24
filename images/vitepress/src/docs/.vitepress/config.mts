@@ -6,9 +6,9 @@ export default defineConfig({
   description: 'A VitePress documentation site',
 
   themeConfig: {
-    nav: [
-      { text: 'Home', link: '/' },
-    ],
+    // nav: [
+    //   { text: 'Home', link: '/' },
+    // ],
 
     sidebar: generateSidebar({
       documentRootPath: 'docs',
