@@ -21,7 +21,7 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=builder /app/docs/.vitepress/dist /usr/share/nginx/html
 
 # Copy custom nginx config (handles SPA-style routing)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY src/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
