@@ -1,4 +1,4 @@
-<img src="../../images/proxmox.png" width="30" align="right"/>
+<img src="../images/proxmox.png" width="30" align="right"/>
 
 - All services hosted in my environment are running on virtual machines
 - All virtual machines in my environment are hosted on Proxmox

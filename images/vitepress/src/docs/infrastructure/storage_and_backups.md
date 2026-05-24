@@ -1,4 +1,4 @@
-<img src="../../images/truenas.png" width="30" align="right"/>
+<img src="../images/truenas.png" width="30" align="right"/>
 
 # Storage and Backups
 

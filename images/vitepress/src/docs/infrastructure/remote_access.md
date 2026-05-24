@@ -1,6 +1,6 @@
 # Remote Access
 
-<img src="../../images/cloudflare.png" width="40" align="right"/>
+<img src="../images/cloudflare.png" width="40" align="right"/>
 
 - Cloudflare Warp is being used for remote access to my homelab
 - Subnet's for each site are assigned to a tunnel running on the respective site

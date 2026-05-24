@@ -1,4 +1,4 @@
-## Code Storage & CI/CD <img src="../../images/actions.png" width="40" align="right"/>
+## Code Storage & CI/CD <img src="../images/actions.png" width="40" align="right"/>
 
 Gitea is responsible for the storage of all of my GIT repositories along with being my primary CI/CD tool for running automated tasks such as executing Ansible playbooks & executing Terraform jobs.
 
@@ -10,7 +10,7 @@ I have CI/CD jobs available for the following
 	- Docker Image build & publish to Gitea image registry
 
 
-## Server Configuration <img src="../../images/ansible.png" width="40" align="right"/>
+## Server Configuration <img src="../images/ansible.png" width="40" align="right"/>
 
 Automation of configuration & installation of my servers & software is handled via Ansible, with the configuration of a range of services such as Docker, DNS and DHCP handled by custom Ansible roles I have built.
 

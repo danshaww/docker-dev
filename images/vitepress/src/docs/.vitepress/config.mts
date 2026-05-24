@@ -16,7 +16,7 @@ export default defineConfig({
       capitalizeFirst: true,
       useTitleFromFrontmatter: true,
       useTitleFromFileHeading: true,
-      excludePattern: ['index.md'],
+      excludePattern: ['index.md','images/*'],
     }),
 
     socialLinks: [

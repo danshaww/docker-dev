@@ -1,6 +1,6 @@
 # Naming Conventions
 
-<img src="../../images/naming.png" width="30" align="right"/>
+<img src="../images/naming.png" width="30" align="right"/>
 This applies to all server types, physical, virtual & containerised, additionally networking devices such as gateways & wireless access points will follow this new naming convention.
 
 *Server type, function, environment & deployment method will all be defined in MOTD on every server via Ansible, and in Proxmox notes & tags where applicable.*

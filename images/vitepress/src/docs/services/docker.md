@@ -1,4 +1,4 @@
-<img src="../../images/docker.png" width="40" align="right"/>
+<img src="../images/docker.png" width="40" align="right"/>
 Docker is my primary means of application hosting, currently all of my applications run in containers, with applications split across a range of hosts, some hosting a single application & others hosting multiple
 
 ---

@@ -1,6 +1,6 @@
 # Name Resolution
 
-<img src="../../images/bind.png" width="30" align="right"/>
+<img src="../images/bind.png" width="30" align="right"/>
 
 - Name resolution in my environment is handled by Bind DNS
 - All of my DNS servers are running Debian 12 & have a standard 2cpu/1GB ram specification
