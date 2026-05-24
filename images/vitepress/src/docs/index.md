@@ -2,16 +2,16 @@
 layout: home
 
 hero:
-  name: "My Docs"
-  text: "Beautiful documentation, fast."
+  name: "Epichouse Documentation"
+  text: "This is a test"
   tagline: Built with VitePress and served via Docker
   actions:
     - theme: brand
-      text: Get Started
-      link: /guide/getting-started
+      text: Test Docs
+      link: /test
     - theme: alt
-      text: View on GitHub
-      link: https://github.com/your-org/your-repo
+      text: View on Gitea
+      link: https://gitea.epichouse.co.uk/dan/docker-dev
 
 features:
   - title: Fast

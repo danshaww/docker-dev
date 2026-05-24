@@ -11,7 +11,7 @@ env:
   owner: dan
   dev_server: ldnapptst1
   dev_compose_project: vitepress-test
-  dev_deploy: false
+  dev_deploy: true
   prod_server: ldnappprd1
   prod_compose_project: vitepress
   prod_deploy: false
