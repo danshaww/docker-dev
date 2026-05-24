@@ -8,7 +8,6 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Guide', link: '/guide/getting-started' },
     ],
 
     sidebar: generateSidebar({
