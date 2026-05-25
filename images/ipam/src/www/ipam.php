@@ -245,32 +245,35 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   /* ── Layout ── */
   html, body { height: 100%; overflow: hidden; }
   .layout  { display: flex; height: 100vh; }
-  .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; transition: transform .25s ease, width .25s ease; z-index: 50; }
-  .sidebar.collapsed { width: 0; overflow: hidden; }
 
-  /* Mobile: sidebar overlays content instead of pushing it */
+  /* Sidebar always fixed, slides in/out via transform */
+  .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 240px; background: var(--sidebar); color: var(--stext); display: flex; flex-direction: column; transition: transform .25s ease; z-index: 50; }
+  .sidebar.collapsed { transform: translateX(-240px); }
+
+  /* Main fills full width, left padding makes room for sidebar on desktop */
+  .main { flex: 1; padding: 24px; overflow-y: auto; height: 100vh; margin-left: 240px; transition: margin-left .25s ease; }
+  .main.sidebar-collapsed { margin-left: 0; }
+
+  /* Mobile */
   @media (max-width: 768px) {
-    .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(0); }
-    .sidebar.collapsed { transform: translateX(-100%); width: 240px; overflow: visible; }
-    .main { padding-top: 56px; }
+    .main { margin-left: 0; padding-top: 56px; }
+    .main.sidebar-collapsed { margin-left: 0; }
   }
 
-  /* Backdrop — only shown via JS adding .open, never automatically */
+  /* Backdrop — only shown via JS adding .open */
   .sidebar-backdrop { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 40; pointer-events: none; }
   .sidebar-backdrop.open { display: block; pointer-events: all; }
 
-  /* Top bar shown on all screens — contains hamburger */
-  .topbar { display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 48px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; flex-shrink: 0; }
+  /* Top bar */
+  .topbar { display: none; align-items: center; gap: 10px; padding: 0 16px; height: 48px; background: var(--bg2); border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 30; }
+  .topbar.visible { display: flex; }
   .hamburger { background: none; border: 1px solid var(--border); border-radius: 5px; cursor: pointer; padding: 5px 8px; color: var(--text3); font-size: 1rem; line-height: 1; flex-shrink: 0; transition: background .15s; }
   .hamburger:hover { background: var(--bg3); color: var(--text); }
   .topbar-title { font-size: .85rem; font-weight: 600; color: var(--text2); }
-  @media (min-width: 769px) {
-    .topbar { display: none; }
-    .main { padding-top: 0; }
-    /* topbar shown via JS when sidebar is collapsed on desktop */
-    .topbar.desktop-visible { display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 30; }
-    .layout { padding-top: 0; }
-    .main.topbar-shown { padding-top: 48px; }
+  .main.topbar-shown { padding-top: 72px; }
+  @media (max-width: 768px) {
+    .topbar { display: flex; }
+    .main { padding-top: 56px; }
   }
   .sidebar-top { padding: 14px 12px 10px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .sidebar-top h1 { font-size: .95rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
@@ -282,7 +285,6 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   .sidebar a.active { background: var(--accent); color: #fff; }
   .sidebar a .cidr { font-family: monospace; font-weight: 700; display: block; }
   .sidebar a .meta { font-size: .7rem; opacity: .7; }
-  .main { flex: 1; padding: 24px; overflow-y: auto; height: 100vh; }
   .main-inner { max-width: 1400px; margin: 0 auto; }
 
   /* ── Sidebar buttons ── */
@@ -709,29 +711,30 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
 
 <script>
   // ── Sidebar toggle ────────────────────────────────────────────────────────
-  const sidebar         = document.getElementById('sidebar');
-  const backdrop        = document.getElementById('sidebarBackdrop');
-  const topbar          = document.getElementById('topbar');
-  const isMobile        = () => window.innerWidth <= 768;
-  const SIDEBAR_KEY     = 'ipam-sidebar';
+  const sidebar     = document.getElementById('sidebar');
+  const backdrop    = document.getElementById('sidebarBackdrop');
+  const topbar      = document.getElementById('topbar');
+  const mainPanel   = document.getElementById('mainPanel');
+  const isMobile    = () => window.innerWidth <= 768;
+  const SIDEBAR_KEY = 'ipam-sidebar';
 
   function setSidebar(open) {
-    const main = document.getElementById('mainPanel');
     if (open) {
       sidebar.classList.remove('collapsed');
       backdrop.classList.remove('open');
-      topbar.classList.remove('desktop-visible');
-      main.classList.remove('topbar-shown');
-      topbar.style.display = '';
+      if (!isMobile()) {
+        mainPanel.style.marginLeft = '240px';
+        topbar.classList.remove('visible');
+        mainPanel.classList.remove('topbar-shown');
+      }
     } else {
       sidebar.classList.add('collapsed');
       if (isMobile()) {
         backdrop.classList.add('open');
       } else {
-        backdrop.classList.remove('open');
-        topbar.classList.add('desktop-visible');
-        main.classList.add('topbar-shown');
-        topbar.style.display = 'flex';
+        mainPanel.style.marginLeft = '0';
+        topbar.classList.add('visible');
+        mainPanel.classList.add('topbar-shown');
       }
     }
     if (!isMobile()) localStorage.setItem(SIDEBAR_KEY, open ? '1' : '0');
@@ -741,32 +744,31 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     setSidebar(sidebar.classList.contains('collapsed'));
   }
 
-  // Restore desktop preference; default open
-  if (!isMobile()) {
-    const pref = localStorage.getItem(SIDEBAR_KEY);
-    if (pref === '0') setSidebar(false);
-    else setSidebar(true);
-  } else {
-    // Mobile: start collapsed
+  // Initial state
+  if (isMobile()) {
     setSidebar(false);
+  } else {
+    setSidebar(localStorage.getItem(SIDEBAR_KEY) !== '0');
   }
 
-  // Auto-collapse/expand on resize
+  // Auto-collapse on resize
   window.addEventListener('resize', () => {
     if (isMobile()) {
-      setSidebar(false);
+      backdrop.classList.remove('open');
+      mainPanel.style.marginLeft = '0';
+      topbar.classList.remove('visible');
+      mainPanel.classList.remove('topbar-shown');
+      // keep whatever collapsed state it's in on mobile
     } else {
-      const pref = localStorage.getItem(SIDEBAR_KEY);
-      setSidebar(pref !== '0');
+      backdrop.classList.remove('open');
+      setSidebar(localStorage.getItem(SIDEBAR_KEY) !== '0');
     }
   });
 
-  // Close sidebar on mobile when navigating
-  if (isMobile()) {
-    document.querySelectorAll('.sidebar a').forEach(a => {
-      a.addEventListener('click', () => setSidebar(false));
-    });
-  }
+  // Close on mobile when navigating
+  document.querySelectorAll('.sidebar a').forEach(a => {
+    a.addEventListener('click', () => { if (isMobile()) setSidebar(false); });
+  });
   const html  = document.documentElement;
   const tBtn  = document.getElementById('themeBtn');
   const MODES = ['system','light','dark'];
