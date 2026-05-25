@@ -253,12 +253,11 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
     .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(0); }
     .sidebar.collapsed { transform: translateX(-100%); width: 240px; overflow: visible; }
     .main { padding-top: 56px; }
-    .sidebar-backdrop { display: block; }
   }
 
-  /* Backdrop for mobile */
-  .sidebar-backdrop { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 40; }
-  .sidebar-backdrop.open { display: block; }
+  /* Backdrop — only shown via JS adding .open, never automatically */
+  .sidebar-backdrop { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 40; pointer-events: none; }
+  .sidebar-backdrop.open { display: block; pointer-events: all; }
 
   /* Top bar shown on all screens — contains hamburger */
   .topbar { display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 48px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; flex-shrink: 0; }
