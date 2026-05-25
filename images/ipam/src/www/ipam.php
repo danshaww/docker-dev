@@ -745,10 +745,21 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   if (!isMobile()) {
     const pref = localStorage.getItem(SIDEBAR_KEY);
     if (pref === '0') setSidebar(false);
+    else setSidebar(true);
   } else {
     // Mobile: start collapsed
     setSidebar(false);
   }
+
+  // Auto-collapse/expand on resize
+  window.addEventListener('resize', () => {
+    if (isMobile()) {
+      setSidebar(false);
+    } else {
+      const pref = localStorage.getItem(SIDEBAR_KEY);
+      setSidebar(pref !== '0');
+    }
+  });
 
   // Close sidebar on mobile when navigating
   if (isMobile()) {
