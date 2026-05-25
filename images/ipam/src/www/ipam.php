@@ -245,7 +245,34 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   /* ── Layout ── */
   html, body { height: 100%; overflow: hidden; }
   .layout  { display: flex; height: 100vh; }
-  .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; }
+  .sidebar { width: 240px; background: var(--sidebar); color: var(--stext); flex-shrink: 0; display: flex; flex-direction: column; transition: transform .25s ease, width .25s ease; z-index: 50; }
+  .sidebar.collapsed { width: 0; overflow: hidden; }
+
+  /* Mobile: sidebar overlays content instead of pushing it */
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; top: 0; left: 0; height: 100vh; transform: translateX(0); }
+    .sidebar.collapsed { transform: translateX(-100%); width: 240px; overflow: visible; }
+    .main { padding-top: 56px; }
+    .sidebar-backdrop { display: block; }
+  }
+
+  /* Backdrop for mobile */
+  .sidebar-backdrop { display: none; position: fixed; inset: 0; background: var(--overlay); z-index: 40; }
+  .sidebar-backdrop.open { display: block; }
+
+  /* Top bar shown on all screens — contains hamburger */
+  .topbar { display: flex; align-items: center; gap: 10px; padding: 0 16px; height: 48px; background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 30; flex-shrink: 0; }
+  .hamburger { background: none; border: 1px solid var(--border); border-radius: 5px; cursor: pointer; padding: 5px 8px; color: var(--text3); font-size: 1rem; line-height: 1; flex-shrink: 0; transition: background .15s; }
+  .hamburger:hover { background: var(--bg3); color: var(--text); }
+  .topbar-title { font-size: .85rem; font-weight: 600; color: var(--text2); }
+  @media (min-width: 769px) {
+    .topbar { display: none; }
+    .main { padding-top: 0; }
+    /* topbar shown via JS when sidebar is collapsed on desktop */
+    .topbar.desktop-visible { display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 30; }
+    .layout { padding-top: 0; }
+    .main.topbar-shown { padding-top: 48px; }
+  }
   .sidebar-top { padding: 14px 12px 10px; border-bottom: 1px solid var(--sidebar3); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .sidebar-top h1 { font-size: .95rem; font-weight: 700; color: #fff; letter-spacing: .03em; line-height: 1.2; }
   .sidebar-top h1 small { display: block; font-size: .68rem; font-weight: 400; color: var(--stext2); margin-top: 1px; }
@@ -351,10 +378,13 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
 <div class="layout">
 
 <!-- ── Sidebar ── -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-top">
     <h1>IPAM <small>IP Address Manager</small></h1>
-    <button class="theme-btn" onclick="cycleTheme()" id="themeBtn">⚙</button>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="theme-btn" onclick="cycleTheme()" id="themeBtn">⚙</button>
+      <button class="theme-btn" onclick="toggleSidebar()" title="Hide sidebar">◀</button>
+    </div>
   </div>
   <div class="sidebar-actions">
     <button class="add-subnet-btn" onclick="openSubnetModal()">+ Add Subnet</button>
@@ -370,8 +400,17 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
   </nav>
 </aside>
 
+<!-- __ Sidebar backdrop (mobile) __ -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
+<!-- __ Top bar (mobile + collapsed desktop) __ -->
+<div class="topbar" id="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <span class="topbar-title">IPAM<?= $subnet ? ' — ' . safe($subnet['name']) : '' ?></span>
+</div>
+
 <!-- __ Main __ -->
-<main class="main">
+<main class="main" id="mainPanel">
 <div class="main-inner">
   <?php if ($error): ?><div class="error">&#9888; <?= safe($error) ?></div><?php endif; ?>
 
@@ -670,7 +709,53 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
 </div>
 
 <script>
-  // ── Theme ──────────────────────────────────────────────────────────────────
+  // ── Sidebar toggle ────────────────────────────────────────────────────────
+  const sidebar         = document.getElementById('sidebar');
+  const backdrop        = document.getElementById('sidebarBackdrop');
+  const topbar          = document.getElementById('topbar');
+  const isMobile        = () => window.innerWidth <= 768;
+  const SIDEBAR_KEY     = 'ipam-sidebar';
+
+  function setSidebar(open) {
+    const main = document.getElementById('mainPanel');
+    if (open) {
+      sidebar.classList.remove('collapsed');
+      backdrop.classList.remove('open');
+      topbar.classList.remove('desktop-visible');
+      main.classList.remove('topbar-shown');
+      topbar.style.display = '';
+    } else {
+      sidebar.classList.add('collapsed');
+      if (isMobile()) {
+        backdrop.classList.add('open');
+      } else {
+        topbar.classList.add('desktop-visible');
+        main.classList.add('topbar-shown');
+        topbar.style.display = 'flex';
+      }
+    }
+    if (!isMobile()) localStorage.setItem(SIDEBAR_KEY, open ? '1' : '0');
+  }
+
+  function toggleSidebar() {
+    setSidebar(sidebar.classList.contains('collapsed'));
+  }
+
+  // Restore desktop preference; default open
+  if (!isMobile()) {
+    const pref = localStorage.getItem(SIDEBAR_KEY);
+    if (pref === '0') setSidebar(false);
+  } else {
+    // Mobile: start collapsed
+    setSidebar(false);
+  }
+
+  // Close sidebar on mobile when navigating
+  if (isMobile()) {
+    document.querySelectorAll('.sidebar a').forEach(a => {
+      a.addEventListener('click', () => setSidebar(false));
+    });
+  }
   const html  = document.documentElement;
   const tBtn  = document.getElementById('themeBtn');
   const MODES = ['system','light','dark'];
