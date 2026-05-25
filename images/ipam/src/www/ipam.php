@@ -729,6 +729,7 @@ $STATUS_COLORS = ['active'=>'#2ecc71','reserved'=>'#f39c12','dhcp'=>'#4f8ef7','i
       if (isMobile()) {
         backdrop.classList.add('open');
       } else {
+        backdrop.classList.remove('open');
         topbar.classList.add('desktop-visible');
         main.classList.add('topbar-shown');
         topbar.style.display = 'flex';
