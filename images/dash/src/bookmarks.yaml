@@ -41,6 +41,9 @@ sections:
       - name: Mesh Commander (Manchester)
         url: https://meshcommander-mcr.epichouse.co.uk
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/meshcentral.png
+      - name: HP Microserver iLO
+        url: https://10.100.0.6/
+        icon: hpe
 
   - title: Prod Applications
     theme: green
