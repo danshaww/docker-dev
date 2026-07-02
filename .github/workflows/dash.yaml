@@ -1,0 +1,17 @@
+name: dash
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'images/dash/**'
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build_dev:
+    uses: epichouse/github-templates/.github/workflows/docker_build.yaml@main
+    with:
+      image_tag: development
+      image_name: dash
+      build_path: images/dash
