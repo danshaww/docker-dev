@@ -15,3 +15,8 @@ jobs:
       image_tag: development
       image_name: dash
       build_path: images/dash
+  deploy_dev:
+    uses: epichouse/github-templates/.github/workflows/docker_pull.yaml@main
+    with:
+      docker_server: ldnapptst1
+      docker_compose_project_name: dash-test
