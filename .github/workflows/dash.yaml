@@ -33,4 +33,4 @@ jobs:
     needs: prod_build
     with:
       docker_server: ldnappprd1
-      docker_compose_project: dash-test
+      docker_compose_project: dash
