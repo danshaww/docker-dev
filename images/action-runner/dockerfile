@@ -89,4 +89,11 @@ RUN ARCH=$(dpkg --print-architecture) \
     && chmod +x /usr/local/bin/bws \
     && rm /tmp/bws.zip
 
+# Populate SSH config file
+COPY src/ssh_config ~/.ssh/config
+
+# Copy tf-summarize binary
+COPY src/tf-summarize /usr/local/bin/tf-summarize
+RUN chmod 755 /usr/local/bin/tf-summarize
+
 WORKDIR /workspace
