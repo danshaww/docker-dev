@@ -54,8 +54,9 @@ RUN install -m 0755 -d /etc/apt/keyrings \
 # --- Ansible ---
 ARG ANSIBLE_COLLECTIONS="community.general,ansible.posix"
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      ansible \
+      python3-pip \
     && rm -rf /var/lib/apt/lists/* \
+    && python3 -m pip install --break-system-packages --no-cache-dir --upgrade "ansible-core>=2.17,<2.18" \
     && if [ -n "$ANSIBLE_COLLECTIONS" ]; then \
          for collection in $(echo "$ANSIBLE_COLLECTIONS" | tr ',' ' '); do \
            collection="$(echo "$collection" | xargs)"; \
