@@ -60,7 +60,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
          for collection in $(echo "$ANSIBLE_COLLECTIONS" | tr ',' ' '); do \
            collection="$(echo "$collection" | xargs)"; \
            if [ -n "$collection" ]; then \
-             ansible-galaxy collection install "$collection"; \
+             ansible-galaxy collection install "$collection" --force; \
            fi; \
          done; \
        fi
