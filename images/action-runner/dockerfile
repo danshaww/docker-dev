@@ -52,9 +52,18 @@ RUN install -m 0755 -d /etc/apt/keyrings \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Ansible ---
+ARG ANSIBLE_COLLECTIONS="community.general,ansible.posix"
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ansible \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && if [ -n "$ANSIBLE_COLLECTIONS" ]; then \
+         for collection in $(echo "$ANSIBLE_COLLECTIONS" | tr ',' ' '); do \
+           collection="$(echo "$collection" | xargs)"; \
+           if [ -n "$collection" ]; then \
+             ansible-galaxy collection install "$collection"; \
+           fi; \
+         done; \
+       fi
 
 # --- HashiCorp: Terraform + Packer ---
 RUN install -m 0755 -d /etc/apt/keyrings \
