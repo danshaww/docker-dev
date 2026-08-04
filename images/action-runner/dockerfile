@@ -53,7 +53,7 @@ RUN install -m 0755 -d /etc/apt/keyrings \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Ansible ---
-ARG ANSIBLE_COLLECTIONS="community.general,ansible.posix"
+ARG ANSIBLE_COLLECTIONS="community.general,ansible.posix,community.docker"
 ARG ANSIBLE_VERSION=2.16.3-0ubuntu2
 RUN apt-get update && apt-get install -y --no-install-recommends \
       ansible-core=$ANSIBLE_VERSION \
