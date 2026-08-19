@@ -87,6 +87,9 @@ sections:
       - name: IP Address Manager
         url: https://ipam.epichouse.co.uk
         icon: https://ipam.epichouse.co.uk/logo.png
+      - name: IT Tools
+        url: https://ittools.epichouse.co.uk/
+        icon: it-tools
 
   - title: Test Applications
     theme: purple
@@ -94,9 +97,6 @@ sections:
       - name: Semaphore
         url: https://semaphore-test.epichouse.co.uk/
         icon: semaphore
-      - name: IT Tools
-        url: https://ittools.k8s.epichouse.co.uk/
-        icon: it-tools
       - name: N8N
         url: https://n8n-test.epichouse.co.uk/
         icon: n8n

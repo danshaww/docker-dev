@@ -39,8 +39,8 @@ jobs:
       - name: Pull Image (DEV)
         run: |
           ssh sa@${{ env.dev_server }} \
-          "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml pull \
-          && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}/compose.yml up -d"
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml up -d"
 
   build-prod:
     runs-on: london
@@ -65,5 +65,5 @@ jobs:
       - name: Pull Image (PROD)
         run: |
           ssh sa@${{ env.prod_server }} \
-          "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml pull \
-          && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}/compose.yml up -d"
+          "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml pull \
+          && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml up -d"
