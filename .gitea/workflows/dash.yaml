@@ -33,7 +33,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
   deploy-dev:
     runs-on: london
-    if: ${{ env.dev_deploy == 'true' }}
+    if: ${{ env.dev_deploy == true }}
     needs: build-dev
     steps:
       - name: Pull Image (DEV)
@@ -59,7 +59,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
   deploy-prod:
     runs-on: london
-    if: ${{ env.prod_deploy == 'true' }}
+    if: ${{ env.prod_deploy == true }}
     needs: build-prod
     steps:
       - name: Pull Image (PROD)
