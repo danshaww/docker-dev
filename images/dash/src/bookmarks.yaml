@@ -112,9 +112,6 @@ sections:
       - name: Homepage
         url: https://homepage-test.epichouse.co.uk/
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
-      - name: Flame
-        url: https://flame-test.epichouse.co.uk/
-        icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/flame.png
       - name: Guacamole
         url: https://guacamole-test.epichouse.co.uk/guacamole/#/
         icon: guacamole
