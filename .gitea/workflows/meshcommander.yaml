@@ -17,7 +17,7 @@ env:
   prod_deploy: true
 
 jobs:
-  build-dev:
+  build_dev:
     runs-on: london
     defaults:
       run:
@@ -31,23 +31,24 @@ jobs:
         run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
-  deploy-dev:
+
+  deploy_dev:
     runs-on: london
-    if: ${{ env.dev_deploy == 'true' }}
-    needs: build-dev
+    needs: build_dev
     steps:
       - name: Pull Image (DEV)
+        if: ${{ env.dev_deploy }}
         run: |
-          ssh sa@${{ env.dev_server }} \
+          sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.dev_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml pull \
           && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml up -d"
 
-  build-prod:
+  build_prod:
     runs-on: london
     defaults:
       run:
         working-directory: ${{ env.image_location }}
-    needs: deploy-dev
+    needs: deploy_dev
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -57,13 +58,14 @@ jobs:
         run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
-  deploy-prod:
+
+  deploy_prod:
     runs-on: london
-    if: ${{ env.prod_deploy == 'true' }}
-    needs: build-prod
+    needs: build_prod
     steps:
       - name: Pull Image (PROD)
+        if: ${{ env.prod_deploy }}
         run: |
-          ssh sa@${{ env.prod_server }} \
+          sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.prod_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml pull \
           && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml up -d"
