@@ -74,6 +74,6 @@ jobs:
     steps:
       - name: Pull Image (PROD)
         run: |
-          sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.prod_server }} -o \
+          sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.prod_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml pull \
           && sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml up -d"
