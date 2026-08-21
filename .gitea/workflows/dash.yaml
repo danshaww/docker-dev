@@ -10,7 +10,7 @@ on:
         type: boolean
         default: true
       prod_deploy:
-        description: 'Deploy Dev'
+        description: 'Deploy Prod'
         required: false
         type: boolean
 
