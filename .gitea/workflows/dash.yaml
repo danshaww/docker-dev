@@ -34,7 +34,7 @@ jobs:
   deploy-dev:
     runs-on: london
     if: ${{ env.dev_deploy }}
-    needs: build-dev
+    # needs: build-dev
     steps:
       - name: Pull Image (DEV)
         run: |
