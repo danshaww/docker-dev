@@ -3,16 +3,6 @@ on:
     paths:
       - images/dash/**
   workflow_dispatch:
-    inputs:
-      dev_deploy:
-        description: 'Deploy Dev'
-        required: false
-        type: boolean
-        default: true
-      prod_deploy:
-        description: 'Deploy Prod'
-        required: false
-        type: boolean
 
 env:
   image_location: ./images/dash
@@ -21,10 +11,8 @@ env:
   owner: dan
   dev_server: ldnapptst1
   dev_compose_project: dash-test
-  dev_deploy: 'true'
   prod_server: ldnappprd1
   prod_compose_project: dash
-  prod_deploy: true
 
 jobs:
   build_dev:
@@ -41,12 +29,13 @@ jobs:
         run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
+
   deploy_dev:
     runs-on: london
-    if: ${{ env.dev_server != '' }}
     needs: build_dev
     steps:
       - name: Pull Image (DEV)
+        if: ${{ env.dev_server != '' }}
         run: |
           sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.dev_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml pull \
@@ -67,12 +56,13 @@ jobs:
         run: docker build -t ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest -f dockerfile .
       - name: Push Docker Image
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
+
   deploy_prod:
     runs-on: london
-    if: ${{ env.prod_server != '' }}
     needs: build_prod
     steps:
       - name: Pull Image (PROD)
+        if: ${{ env.prod_server != '' }}
         run: |
           sshpass -p ${{ secrets.sa_password }} ssh sa@${{ env.prod_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.prod_compose_project }}.yml pull \
