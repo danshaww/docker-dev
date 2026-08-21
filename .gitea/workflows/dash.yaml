@@ -33,7 +33,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
   deploy_dev:
     runs-on: london
-    if: ${{ env.dev_deploy }}
+    # if: ${{ env.dev_deploy }}
     needs: build_dev
     steps:
       - name: Pull Image (DEV)
