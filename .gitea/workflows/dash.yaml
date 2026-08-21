@@ -8,7 +8,7 @@ on:
         description: 'Deploy Dev'
         required: false
         type: boolean
-        defaults: true
+        default: true
       prod_deploy:
         description: 'Deploy Dev'
         required: false
