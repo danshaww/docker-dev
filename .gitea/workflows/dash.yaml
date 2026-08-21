@@ -3,6 +3,15 @@ on:
     paths:
       - images/dash/**
   workflow_dispatch:
+    inputs:
+      dev_deploy:
+        description: 'Deploy Dev'
+        required: false
+        type: boolean
+      prod_deploy:
+        description: 'Deploy Dev'
+        required: false
+        type: boolean
 
 env:
   image_location: ./images/dash
@@ -33,7 +42,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:development
   deploy_dev:
     runs-on: london
-    if: ${{ env.dev_deploy == "true" }}
+    if: ${{ inputs.dev_deploy || true }}
     needs: build_dev
     steps:
       - name: Pull Image (DEV)
@@ -59,7 +68,7 @@ jobs:
         run: docker push ${{ env.registry }}/${{ env.owner }}/${{ env.image_name }}:latest
   deploy_prod:
     runs-on: london
-    if: ${{ env.prod_deploy == "true" }}
+    if: ${{ inputs.dev_deploy || false }}
     needs: build_prod
     steps:
       - name: Pull Image (PROD)
