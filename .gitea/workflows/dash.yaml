@@ -38,7 +38,7 @@ jobs:
     steps:
       - name: Pull Image (DEV)
         run: |
-          ssh sa@${{ env.dev_server }} \
+          ssh sa@${{ env.dev_server }} -o StrictHostKeyChecking=accept-new \
           "sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml pull \
           && sudo docker compose -f /var/lib/docker/compose/${{ env.dev_compose_project }}.yml up -d"
 
