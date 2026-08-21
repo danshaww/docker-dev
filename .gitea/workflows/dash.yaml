@@ -21,7 +21,7 @@ env:
   owner: dan
   dev_server: ldnapptst1
   dev_compose_project: dash-test
-  dev_deploy: true
+  dev_deploy: 'true'
   prod_server: ldnappprd1
   prod_compose_project: dash
   prod_deploy: true
