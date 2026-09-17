@@ -103,9 +103,6 @@ sections:
       - name: Minio
         url: https://minio-test.epichouse.co.uk/
         icon: https://images.seeklogo.com/logo-png/63/2/minio-icon-logo-png_seeklogo-637818.png
-      - name: NextCloud
-        url: https://nextcloud-test.epichouse.co.uk/
-        icon: nextcloud
       - name: SilverBullet
         url: https://silverbullet-test.epichouse.co.uk/
         icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/silverbullet.png
@@ -122,8 +119,8 @@ sections:
         url: https://rustfs-test-ui.epichouse.co.uk
         icon: rustfs
       - name: IP Address Manager
-        url: https://ipam.epichouse.co.uk
-        icon: https://ipam.epichouse.co.uk/logo.png
+        url: https://ipam-test.epichouse.co.uk
+        icon: https://ipam-test.epichouse.co.uk/logo.png
 
   - title: Cloud Services
     theme: cyan
