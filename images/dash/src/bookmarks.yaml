@@ -45,6 +45,12 @@ sections:
       - name: Gitea MySQL Instance
         url: https://gitea-adminer.epichouse.co.uk/?server=db&username=root
         icon: adminer
+      - name: Forgejo
+        url: https://git.epichouse.co.uk/
+        icon: forgejo
+      - name: Forgejo MySQL Instance
+        url: https://forgejo-adminer.epichouse.co.uk/?server=db&username=root
+        icon: adminer
       - name: Jellyfin
         url: https://jellyfin.epichouse.co.uk/
         icon: jellyfin
