@@ -3,3 +3,4 @@ COPY src/ /usr/share/nginx/html
 RUN chown nginx:nginx /usr/share/nginx/html -R
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+# TODO: maybe change this to pull the bookmarks from an env var rather than requiring an image update?
