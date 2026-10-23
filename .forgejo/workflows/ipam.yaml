@@ -1,0 +1,53 @@
+on:
+  push:
+    paths:
+      - images/ipam/**
+  workflow_dispatch:
+
+jobs:
+  build_dev:
+    uses: dan/workflow-templates/.forgejo/workflows/docker-image-build.yml@main
+    with:
+      runner: london
+      image_location: ./images/ipam
+      registry: gitea.epichouse.co.uk
+      forgejo_url: ${{ github.server_url }}
+      repository: ${{ github.repository }}
+      owner: dan
+      image_name: ipam
+      image_tag: development
+    secrets: inherit
+
+  deploy_dev:
+    needs: build_dev
+    uses: dan/workflow-templates/.forgejo/workflows/docker-compose-deploy.yml@main
+    with:
+      runner: london
+      server: ldnapptst1
+      compose_project: ipam-test
+      enabled: true
+    secrets: inherit
+
+  build_prod:
+    needs: deploy_dev
+    uses: dan/workflow-templates/.forgejo/workflows/docker-image-build.yml@main
+    with:
+      runner: london
+      image_location: ./images/ipam
+      registry: gitea.epichouse.co.uk
+      forgejo_url: ${{ github.server_url }}
+      repository: ${{ github.repository }}
+      owner: dan
+      image_name: ipam
+      image_tag: latest
+    secrets: inherit
+
+  deploy_prod:
+    needs: build_prod
+    uses: dan/workflow-templates/.forgejo/workflows/docker-compose-deploy.yml@main
+    with:
+      runner: london
+      server: ldnappprd1
+      compose_project: ipam
+      enabled: true
+    secrets: inherit
