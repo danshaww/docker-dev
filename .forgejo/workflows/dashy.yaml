@@ -10,7 +10,7 @@ jobs:
     with:
       runner: london
       image_location: ./images/dashy
-      registry: gitea.epichouse.co.uk
+      registry: git.epichouse.co.uk
       forgejo_url: ${{ github.server_url }}
       repository: ${{ github.repository }}
       owner: dan
@@ -34,7 +34,7 @@ jobs:
     with:
       runner: london
       image_location: ./images/dashy
-      registry: gitea.epichouse.co.uk
+      registry: git.epichouse.co.uk
       forgejo_url: ${{ github.server_url }}
       repository: ${{ github.repository }}
       owner: dan
