@@ -1,0 +1,23 @@
+networks:
+  backend: null
+services:
+  watchtower:
+    image: containrrr/watchtower
+    restart: unless-stopped
+    environment:
+#      - WATCHTOWER_NOTIFICATIONS_LEVEL=info
+#      - WATCHTOWER_NOTIFICATIONS=email
+#      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=watchtower@epichouse.co.uk
+#      - WATCHTOWER_NOTIFICATION_EMAIL_TO=danshaw509@gmail.com
+#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp
+#      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=25
+#      - WATCHTOWER_NOTIFICATIONS_HOSTNAME=vm-upk-${ENV}-01
+#      - WATCHTOWER_NO_STARTUP_MESSAGE=true
+      - WATCHTOWER_SCHEDULE=0 0 4 4 * * # Friday 4AM
+      #- WATCHTOWER_NOTIFICATIONS=shoutrrr
+      #- WATCHTOWER_NOTIFICATION_URL=${DiscordURL}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - backend

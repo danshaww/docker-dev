@@ -1,0 +1,149 @@
+---
+# Page meta info, like heading, footer text and nav links
+pageInfo:
+  title: Dashy
+  description: Welcome to the epichouse dashy dashboard!
+
+# Optional app settings and configuration
+appConfig:
+  theme: Material-Dark
+  customColors:
+    material-dark:
+      primary: #5c90eb
+      background: #313941
+      background-darker: #5c90eb
+  webSearch: { disableWebSearch: true }
+  layout: horizontal
+ # iconSize: true
+  #disableConfiguration: true
+  hideSettings: true
+# Main content - An array of sections, each containing an array of items
+sections:
+
+- name: London
+  icon: fas fa-server
+  items:
+  - title: Proxmox VE
+    description: Primary Virtualisation Server
+    icon: hl-proxmox
+    url: https://srv-pve-prod-01.internal.epichouse.co.uk:8006/
+    target: newtab
+  - title: Proxmox Backup Server
+    description: Primary Backup Server
+    icon: hl-proxmox
+    url: https://srv-pbs-prod-01.internal.epichouse.co.uk:8007/
+    target: newtab
+  - title: Unifi
+    description: Network Controller (local)
+    icon: hl-unifi
+    url: https://unifi-ldn.epichouse.co.uk/
+    target: newtab
+  - title: Gitea
+    description: My self hosted git server.
+    icon: hl-gitea
+    url: https://gitea.epichouse.co.uk/
+    target: newtab
+  - title: Passbolt
+    description: My self hosted password manager.
+    icon: hl-passbolt
+    url: https://passbolt.internal.epichouse.co.uk/
+    target: newtab
+  - title: Netbox
+    description: My self hosted IPAM solution.
+    icon: hl-netbox
+    url: https://netbox.internal.epichouse.co.uk/
+    target: newtab
+  - title: Bookstack
+    description: My self hosted documentation solution.
+    icon: hl-bookstack
+    url: https://docs.internal.epichouse.co.uk/
+    target: newtab
+  - title: Uptime Kuma
+    description: My self hosted monitoring solution.
+    icon: hl-uptime-kuma
+    url: https://uptimekuma.internal.epichouse.co.uk/
+    target: newtab
+  - title: qBittorrent
+    description: My self hosted bittorrent solution.
+    icon: hl-qbittorrent
+    url: https://qbittorrent.internal.epichouse.co.uk/
+    target: newtab
+  - title: Graylog
+    description: My self hosted logging solution.
+    icon: hl-graylog
+    url: https://graylog.internal.epichouse.co.uk/
+    target: newtab
+
+- name: Infrastructure (Manchester)
+  icon: fas fa-server
+  items:
+  - title: Unifi
+    description: Network Controller (local)
+    icon: hl-unifi
+    url: https://unifi-mcr.epichouse.co.uk/
+    target: newtab
+  - title: Proxmox VE
+    description: MCR Virtualisation Server
+    icon: hl-proxmox
+    url: https://srv-pve-mcr-prod-01.internal.epichouse.co.uk:8006/
+    target: newtab
+  - title: Proxmox Backup Server
+    description: MCR Backup Server
+    icon: hl-proxmox
+    url: https://vm-pbs-mcr-prod-01.internal.epichouse.co.uk:8007/
+    target: newtab
+
+
+- name: Cloud Services
+  icon: fas fa-cloud
+  items:
+  - title: Azure Portal
+    description: Azure Portal
+    icon: hl-azure
+    url: https://portal.azure.com/
+    target: newtab
+  - title: Azure DevOps
+    description: Azure DevOps
+    icon: hl-azure-devops
+    url: https://dev.azure.com/EpichouseCloud/DS/_build
+    target: newtab
+  - title: Github
+    description: Github
+    icon: hl-github
+    url: https://github.com
+    target: newtab
+  - title: Dockerhub
+    description: Dockerhub
+    icon: hl-docker
+    url: https://hub.docker.com/
+    target: newtab
+  - title: AWS
+    description: Amazon Web Services
+    icon: hl-aws
+    url: https://eu-west-2.console.aws.amazon.com/console/
+    target: newtab
+  - title: Sendgrid
+    description: Sendgrid
+    icon: favicon
+    url: https://sendgrid.com/en-us
+    target: newtab
+  - title: SMTP2GO
+    description: SMTP2GO
+    icon: favicon
+    url: https://app.smtp2go.com
+    target: newtab
+  - title: Cloudflare Dashboard
+    description: Cloudflare
+    icon: hl-cloudflare
+    url: https://dash.cloudflare.com/90d66f15b080eee95b3ea1fae786118e/epichouse.co.uk
+    target: newtab
+  - title: Cloudflare Zero Trust
+    description: Cloudflare
+    icon: hl-cloudflare-zero-trust
+    url: https://one.dash.cloudflare.com/90d66f15b080eee95b3ea1fae786118e/access/apps?search=
+    target: newtab
+  - title: Unifi
+    description: Network Controller (Cloud)
+    icon: hl-unifi
+    url: https://ui.unifi.com/
+    target: newtab

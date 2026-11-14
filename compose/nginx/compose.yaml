@@ -1,0 +1,26 @@
+networks:
+  backend: null
+  frontend:
+    external: true
+    name: traefik_backend
+
+services:
+  example-container:
+    image: linuxserver/nginx
+    restart: unless-stopped
+    environment:
+      - PUID=0
+      - PGID=121
+    volumes:
+      - ./data:/config/www
+    labels:
+      - traefik.enable=true
+      - traefik.backend=frontend
+      - traefik.docker.network=app-traefik-${ENV}_backend
+      - traefik.http.routers.example-container.rule=Host(`example-container.${ENV}.epichouse.co.uk`)
+      - traefik.http.routers.example-container.entrypoints=websecure
+      - traefik.http.services.example-container.loadbalancer.server.port=80
+      - traefik.http.routers.example-container.tls=true
+    networks:
+      - backend
+      - frontend

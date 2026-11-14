@@ -1,0 +1,43 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+title: Epichouse
+description: Epichouse Dashboard
+resources: false
+# background:
+#   image: /images/background.jpg
+#   blur: sm
+#   brightness: 10
+#   # opacity: 40
+#   saturate: 0
+
+headerStyle: boxed
+
+quicklaunch:
+  searchDescriptions: true
+#  hideInternetSearch: true
+  showSearchSuggestions: true
+#  hideVisitURL: true
+
+
+
+
+layout:
+  Infrastructure:
+    style: column
+  Prod Applications:
+    style: column
+  Test Applications:
+    style: column
+
+#groupsInitiallyCollapsed: true
+useEqualHeights: true
+disableCollapse: true
+theme: dark
+color: neutral
+#
+#providers:
+#  openweathermap: openweathermapapikey
+#  weatherapi: weatherapiapikey
+
