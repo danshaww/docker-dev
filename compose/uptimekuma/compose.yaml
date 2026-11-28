@@ -1,0 +1,32 @@
+networks:
+  backend: null
+  frontend:
+    external: true
+    name: ansible-traefik_backend
+services:
+  uptimekuma:
+    user: root
+    privileged: true
+    image: louislam/uptime-kuma:1.23.13
+    environment:
+      - PUID=0
+      - PGID=121
+    volumes:
+      - ./data/uptimekuma:/app/data
+      - /run/docker.sock:/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.uptimekuma.rule=Host(`uptimekuma.prod.epichouse.co.uk`)
+      - traefik.http.routers.uptimekuma.entrypoints=websecure
+      - traefik.http.services.uptimekuma.loadbalancer.server.port=3001
+      - traefik.http.routers.uptimekuma.tls=true
+      - traefik.http.routers.dockge.tls.certresolver=letsencrypt
+      - traefik.http.routers.dockge.tls.domains[0].main=${ENV}.epichouse.co.uk
+      - traefik.http.routers.dockge.tls.domains[0].sans=*.${ENV}.epichouse.co.uk
+    ports:
+      - 3001:3001
+    networks:
+      - backend
+      - frontend
